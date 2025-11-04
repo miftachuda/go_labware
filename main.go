@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"io"
@@ -11,6 +12,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
@@ -762,8 +764,45 @@ func castSample(sam []Sample) (string, error) {
 	
 	return fmt.Sprintf("<b>Shift : %s</b> \n%s", shift, finalSample.String()), nil
 }
+func castSampleJSON(sam []Sample) (string, error) {
+	shift := detectShift(sam)
 
-// stringRep replaces keywords in the final string
+	// Group samples by code
+	objList := make(map[string][]Sample)
+	for _, s := range sam {
+		objList[s.Code] = append(objList[s.Code], s)
+	}
+
+	// Build a structured JSON response
+	result := map[string]interface{}{
+		"shift":   shift,
+		"samples": []map[string]interface{}{},
+	}
+
+	for code, samples := range objList {
+		points := []map[string]string{}
+		for _, s := range samples {
+			points = append(points, map[string]string{
+				"param": s.Param,
+				"value": s.Value,
+				"unit":  s.Unit,
+			})
+		}
+		result["samples"] = append(result["samples"].([]map[string]interface{}), map[string]interface{}{
+			"code":   code,
+			"points": points,
+		})
+	}
+
+	// Encode to JSON
+	jsonBytes, err := json.Marshal(result)
+	if err != nil {
+		return "", fmt.Errorf("failed to encode JSON: %v", err)
+	}
+
+	return string(jsonBytes), nil
+}
+
 var replacer = strings.NewReplacer(
 	"Kinematic Viscosity at 40°C", "Visco 40°C",
 	"Kinematic Viscosity at 60°C", "Visco 60°C",
@@ -907,12 +946,7 @@ func GetData() ([3]string, error) {
 		return [3]string{}, fmt.Errorf("Step 11 (ClickOK 2) failed: %v", err)
 	}
 	
-	// --- Process Data from Run 1 (dom_loc2) ---
 	fmt.Println("Processing data...")
-
-	// Find the table body. The JS path was:
-	// dom_loc2.window.document.getElementsByClassName("dataTableInner")[0].children[1].children
-	// This translates to:
 	tableRoot := domLoc2.Find(".dataTableInner").First()
 	if tableRoot.Length() == 0 {
 		return [3]string{}, fmt.Errorf("Step 12 (Process): could not find .dataTableInner in final DOM")
@@ -924,9 +958,9 @@ func GetData() ([3]string, error) {
 	}
 
 	// dataLoc2[0] = malam, dataLoc2[1] = pagi, dataLoc2[2] = sore
-	castedLoc2Malam, _ := castSample(dataLoc2[0])
-	castedLoc2Pagi, _ := castSample(dataLoc2[1])
-	castedLoc2Sore, _ := castSample(dataLoc2[2])
+	castedLoc2Malam, _ := castSampleJSON(dataLoc2[0])
+	castedLoc2Pagi, _ := castSampleJSON(dataLoc2[1])
+	castedLoc2Sore, _ := castSampleJSON(dataLoc2[2])
 
 	finalResultLoc2M := stringRep(castedLoc2Malam)
 	finalResultLoc2P := stringRep(castedLoc2Pagi)
@@ -935,18 +969,68 @@ func GetData() ([3]string, error) {
 	fmt.Println("Process finished successfully.")
 	return [3]string{finalResultLoc2M, finalResultLoc2P, finalResultLoc2S}, nil
 }
+type Cache struct {
+	Data      [3]string
+	Timestamp time.Time
+	mu        sync.Mutex
+}
 
-// main is the entry point
-func main() {
-	results, err := GetData()
-	if err != nil {
-		log.Fatalf("Error running GetData: %v", err)
+var cache Cache
+var cacheDuration = 1 * time.Minute
+
+
+func getCachedData() ([3]string, error) {
+	cache.mu.Lock()
+	defer cache.mu.Unlock()
+
+	if time.Since(cache.Timestamp) < cacheDuration {
+		return cache.Data, nil
 	}
 
-	fmt.Println("--- SHIFT MALAM ---")
-	fmt.Println(results[0])
-	fmt.Println("--- SHIFT PAGI ---")
-	fmt.Println(results[1])
-	fmt.Println("--- SHIFT SORE ---")
-	fmt.Println(results[2])
+	data, err := GetData()
+	if err != nil {
+		return [3]string{}, err
+	}
+
+	cache.Data = data
+	cache.Timestamp = time.Now()
+	return cache.Data, nil
+}
+
+func main() {
+	http.HandleFunc("/malam", handleShift(0))
+	http.HandleFunc("/pagi", handleShift(1))
+	http.HandleFunc("/sore", handleShift(2))
+
+	fmt.Println("Server running on http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func handleShift(index int) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		results, err := getCachedData()
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Error fetching data: %v", err), http.StatusInternalServerError)
+			return
+		}
+		writeJSON(w, results[index])
+	}
+}
+
+func writeJSON(w http.ResponseWriter, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+
+	switch v := data.(type) {
+	case string:
+		// already JSON, write directly
+		_, err := w.Write([]byte(v))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	default:
+		// normal struct/map, encode normally
+		if err := json.NewEncoder(w).Encode(v); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
 }
