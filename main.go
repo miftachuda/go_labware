@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -1299,6 +1300,35 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Check for service control commands
+	if len(os.Args) > 1 {
+		cmd := os.Args[1]
+		switch cmd {
+		case "install":
+			err = s.Install()
+			if err != nil {
+				log.Fatalf("Failed to install service: %v", err)
+			}
+			fmt.Println("Service installed.")
+			return
+		case "uninstall":
+			err = s.Uninstall()
+			if err != nil {
+				log.Fatalf("Failed to uninstall service: %v", err)
+			}
+			fmt.Println("Service uninstalled.")
+			return
+		case "start":
+			s.Start()
+			return
+		case "stop":
+			s.Stop()
+			return
+		}
+	}
+
+	// Only run the service here
 	if err = s.Run(); err != nil {
 		logger.Error(err)
 	}
