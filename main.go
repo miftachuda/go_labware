@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/json"
 	"encoding/xml"
@@ -17,6 +18,7 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/kardianos/service"
 	bolt "go.etcd.io/bbolt"
 )
 
@@ -1236,11 +1238,18 @@ func writeJSON(w http.ResponseWriter, data interface{}) {
 	}
 }
 
-func main() {
+var logger service.Logger
+
+type program struct {
+	httpServer *http.Server
+}
+
+func (p *program) Start(s service.Service) error {
 	if err := initDB(); err != nil {
-		panic(err)
+		logger.Errorf("Failed to initialize database: %v", err)
+		return err
 	}
-	defer closeDB()
+
 	http.HandleFunc("/malam", handleSampleJSON(0))
 	http.HandleFunc("/pagi", handleSampleJSON(1))
 	http.HandleFunc("/sore", handleSampleJSON(2))
@@ -1248,6 +1257,49 @@ func main() {
 	http.HandleFunc("/pagicsv", handleSampleCSV(1))
 	http.HandleFunc("/sorecsv", handleSampleCSV(2))
 
-	fmt.Println("Server running on http://localhost:53238")
-	log.Fatal(http.ListenAndServe(":53238", nil))
+	p.httpServer = &http.Server{Addr: ":53238"}
+
+	go p.run()
+	return nil
+}
+
+func (p *program) run() {
+	logger.Info("Server running on http://localhost:53238")
+	if err := p.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		logger.Errorf("HTTP server ListenAndServe: %v", err)
+	}
+}
+
+func (p *program) Stop(s service.Service) error {
+	logger.Info("Stopping service...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := p.httpServer.Shutdown(ctx); err != nil {
+		logger.Warningf("HTTP server Shutdown: %v", err)
+	}
+	closeDB()
+	logger.Info("Service stopped.")
+	return nil
+}
+
+func main() {
+	svcConfig := &service.Config{
+		Name:        "GoLabwareService",
+		DisplayName: "Go Labware Data Scraper",
+		Description: "Scrapes data from LIMS and serves it via HTTP.",
+	}
+
+	prg := &program{}
+	s, err := service.New(prg, svcConfig)
+	if err != nil {
+		log.Fatal(err)
+	}
+	logger, err = s.Logger(nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err = s.Run(); err != nil {
+		logger.Error(err)
+	}
 }
