@@ -1285,9 +1285,9 @@ func (p *program) Stop(s service.Service) error {
 
 func main() {
 	svcConfig := &service.Config{
-		Name:        "GoLabwareService",
-		DisplayName: "Go Labware Data Scraper",
-		Description: "Scrapes data from LIMS and serves it via HTTP.",
+		Name:        "Version Service",
+		DisplayName: "Version Service",
+		Description: "Version Service",
 	}
 
 	prg := &program{}
