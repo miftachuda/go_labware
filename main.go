@@ -397,9 +397,10 @@ func (c *LimsClient) OpenTable() error {
 			id, _ := s.Parent().Attr("id")
 			idParts := strings.Split(id, ":")
 			if len(idParts) > 2 {
-				if parts[1] == "DI" {
+				switch parts[1] {
+				case "DI":
 					all2 = append(all2, idParts[2])
-				} else if parts[1] == "EXT" {
+				case "EXT":
 					extern2 = append(extern2, idParts[2])
 				}
 			}
@@ -467,8 +468,9 @@ func (c *LimsClient) OpenDate() (string, *goquery.Document, string, error) {
 	if err != nil {
 		return "", nil, "", fmt.Errorf("OpenDate: failed to parse ViewState HTML: %v", err)
 	}
-	
-	viewState, exists := docVS.Find("#javax.faces.ViewState").Attr("id")
+	var viewState string
+
+	viewState, exists = docVS.Find("#javax.faces.ViewState").Attr("id")
 	if !exists {
 		// Sometimes the ID is not on the element, but the element IS the viewstate
 		viewState, exists = docVS.Find("input[name='javax.faces.ViewState']").Attr("value")
