@@ -10,12 +10,14 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	bolt "go.etcd.io/bbolt"
 )
 
 // --- Structs for XML Parsing ---
@@ -413,8 +415,6 @@ func (c *LimsClient) OpenTable() error {
 	return nil
 }
 
-// OpenDate simulates clicking the 'Run' button to open the date popup
-// Returns the "OK" button ID, the popup DOM, and the new viewstate
 func (c *LimsClient) OpenDate() (string, *goquery.Document, string, error) {
 	data := url.Values{}
 	data.Set("mf:search:label", "")
@@ -470,16 +470,13 @@ func (c *LimsClient) OpenDate() (string, *goquery.Document, string, error) {
 	}
 	var viewState string
 
-	viewState, exists = docVS.Find("#javax.faces.ViewState").Attr("id")
+	viewState, exists = docVS.Find("#javax.faces.ViewState").Attr("value")
 	if !exists {
-		// Sometimes the ID is not on the element, but the element IS the viewstate
+		// Fallback: sometimes the input has name attribute
 		viewState, exists = docVS.Find("input[name='javax.faces.ViewState']").Attr("value")
 		if !exists {
 			return "", nil, "", fmt.Errorf("OpenDate: could not find new ViewState")
 		}
-	} else {
-		// Fallback if the structure is different
-		viewState, _ = docVS.Find("#javax.faces.ViewState").Attr("value")
 	}
 
 
@@ -733,71 +730,44 @@ func detectShift(sampleGroup []Sample) string {
 	return "Sore"
 }
 
-// castSample formats a sample group into a string
-func castSample(sam []Sample) (string, error) {
-	shift := detectShift(sam)
-	
-	// Group samples by code
-	objList := make(map[string][]Sample)
-	for _, s := range sam {
-		objList[s.Code] = append(objList[s.Code], s)
-	}
 
-	// Create a stable order based on codes (maps are not ordered)
-	var codes []string
-	for code := range objList {
-		codes = append(codes, code)
-	}
-	// Sort codes alphabetically/numerically
-	// You might want a more robust numeric sort if codes are purely numeric
-	
-	var finalSample strings.Builder
-	for _, code := range codes {
-		curr := objList[code]
-		sampleName := curr[0].Code
-		
-		var pointDetail strings.Builder
-		for _, curr1 := range curr {
-			str := fmt.Sprintf("%s : %s %s \n", curr1.Param, curr1.Value, curr1.Unit)
-			pointDetail.WriteString(str)
-		}
-		finalSample.WriteString(fmt.Sprintf("<b>%s :</b>\n%s", sampleName, pointDetail.String()))
-	}
-	
-	return fmt.Sprintf("<b>Shift : %s</b> \n%s", shift, finalSample.String()), nil
+type PointValue struct {
+	Value string `json:"value"`
+	Unit  string `json:"unit"`
 }
 func castSampleJSON(sam []Sample) (string, error) {
 	shift := detectShift(sam)
 
-	// Group samples by code
-	objList := make(map[string][]Sample)
+	// This is the main "samples" map.
+	// It will map a "code" (e.g., "02405") to its map of points.
+	samplesMap := make(map[string]map[string]PointValue)
+
+	// Loop through every single sample reading
 	for _, s := range sam {
-		objList[s.Code] = append(objList[s.Code], s)
+
+		// 1. Check if we've seen this code (e.g., "02405") before.
+		// If not, create a new inner map for it.
+		if _, ok := samplesMap[s.Code]; !ok {
+			samplesMap[s.Code] = make(map[string]PointValue)
+		}
+
+		// 2. Add the point to the inner map.
+		// The "param" (e.g., "Color") is now the KEY.
+		samplesMap[s.Code][s.Param] = PointValue{
+			Value: s.Value, // Value is kept as a string
+			Unit:  s.Unit,
+		}
 	}
 
-	// Build a structured JSON response
+	// Build the final result object
 	result := map[string]interface{}{
 		"shift":   shift,
-		"samples": []map[string]interface{}{},
-	}
-
-	for code, samples := range objList {
-		points := []map[string]string{}
-		for _, s := range samples {
-			points = append(points, map[string]string{
-				"param": s.Param,
-				"value": s.Value,
-				"unit":  s.Unit,
-			})
-		}
-		result["samples"] = append(result["samples"].([]map[string]interface{}), map[string]interface{}{
-			"code":   code,
-			"points": points,
-		})
+		"samples": samplesMap, // Assign the whole map we just built
 	}
 
 	// Encode to JSON
-	jsonBytes, err := json.Marshal(result)
+	// Using MarshalIndent for nice formatting, use json.Marshal for compact output
+	jsonBytes, err := json.MarshalIndent(result, "", "  ")
 	if err != nil {
 		return "", fmt.Errorf("failed to encode JSON: %v", err)
 	}
@@ -837,22 +807,41 @@ func stringRep(text string) string {
 }
 
 // proceesArray parses the final HTML table DOM into Sample structs
-func proceesArray(arrayIn *goquery.Selection) ([][]Sample, error) {
+func processArray(arrayIn *goquery.Selection) ([][]Sample, error) {
 	var samples []Sample
-	
-	// The JS uses array_in[0].children[1].children
-	// goquery: .Find("tbody").Children()
-	arrayIn.Find("tbody").Children().Each(func(i int, row *goquery.Selection) {
+
+	var rows *goquery.Selection
+
+	// Check if the passed-in selection is ALREADY the tbody
+	if arrayIn.Is("tbody") {
+		rows = arrayIn.Children()
+	} else {
+		// Otherwise, assume it's a parent (like <table>) and find the tbody
+		rows = arrayIn.Find("tbody").Children()
+	}
+
+	rows.Each(func(i int, row *goquery.Selection) {
 		cols := row.Children()
-		
-		// Date parsing: "03-Nov-2025 23:00"
+
+		// --- THIS IS THE FIX ---
+		// Check if the row has enough columns (we need up to index 8)
+		if cols.Length() < 9 {
+			return // Skips this row (like 'continue' in a normal loop)
+		}
+
+		// Now, check if the date column (a key field) is empty.
+		// If it's empty, it's not a valid data row, so we skip it.
 		dateStr := strings.TrimSpace(cols.Eq(1).Text())
+		if dateStr == "" {
+			return // Skips this row
+		}
+		// --- END FIX ---
+
+		// Date parsing: "11/05/2025 12:00:51 AM"
 		date, err := time.Parse("01/02/2006 03:04:05 PM", dateStr)
 		if err != nil {
-			// Try without time if it fails
 			date, err = time.Parse("02-Jan-2006", dateStr)
 			if err != nil {
-
 				date = time.Now() // Use a fallback
 			}
 		}
@@ -866,9 +855,9 @@ func proceesArray(arrayIn *goquery.Selection) ([][]Sample, error) {
 			Unit:    strings.TrimSpace(cols.Eq(7).Text()),
 		})
 	})
-	
+
 	if len(samples) == 0 {
-		fmt.Println("Warning: proceesArray found no samples in the table.")
+		fmt.Println("Warning: processArray found no samples in the table.")
 		// Return empty shifts to avoid panic
 		return [][]Sample{{}, {}, {}}, nil
 	}
@@ -878,88 +867,78 @@ func proceesArray(arrayIn *goquery.Selection) ([][]Sample, error) {
 		return nil, err
 	}
 	
-	// The JS code's active path is just `return ["All", sorted];`
 	return sorted, nil
 }
 
-// (The CSV parsing functions parseDataToCSV and parseToCSV were not used in getData,
-// so they are omitted here for brevity unless you need them.)
 
-// --- Main Execution Function ---
-
-// GetData orchestrates the entire scraping process
 func GetData() ([3]string, error) {
-	// !!! REPLACE WITH YOUR PASSWORD !!!
 	password := "XXXXXXXXXXX"
 	
 	client := NewLimsClient()
 
-	fmt.Println("Starting process...")
+	fmt.Println("starting process...")
 	if err := client.One(); err != nil {
-		return [3]string{}, fmt.Errorf("Step 1 (One) failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 1 (one) failed: %v", err)
 	}
 	
 	if err := client.LoginForm("sutanto", password); err != nil {
-		return [3]string{}, fmt.Errorf("Step 2 (LoginForm) failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 2 (loginform) failed: %v", err)
 	}
 	
 	if err := client.MainPage(); err != nil {
-		return [3]string{}, fmt.Errorf("Step 3 (MainPage) failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 3 (mainpage) failed: %v", err)
 	}
 	
 	if err := client.OpenQuery(); err != nil {
-		return [3]string{}, fmt.Errorf("Step 4 (OpenQuery) failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 4 (openquery) failed: %v", err)
 	}
 	
 	if err := client.OpenTable(); err != nil {
-		return [3]string{}, fmt.Errorf("Step 5 (OpenTable) failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 5 (opentable) failed: %v", err)
 	}
 	
 	// Run 1 (for dom_loc2)
 	buttonID1, dom1, viewState1, err := client.OpenDate()
 	if err != nil {
-		return [3]string{}, fmt.Errorf("Step 6 (OpenDate 1) failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 6 (opendate 1) failed: %v", err)
 	}
 	
 	domLoc2, vs5, lwfocus, ecfocus, onHidelink, err := client.ClickOK(buttonID1, dom1, viewState1)
 	if err != nil {
-		return [3]string{}, fmt.Errorf("Step 7 (ClickOK 1) failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 7 (clickok 1) failed: %v", err)
 	}
 	
 	if err := client.OnHide(vs5, lwfocus, ecfocus, onHidelink); err != nil {
-		return [3]string{}, fmt.Errorf("Step 8 (OnHide) failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 8 (onhide) failed: %v", err)
 	}
 	
 	// This step was bugged in the JS. Using corrected parameters.
 	if err := client.RefreshTable(); err != nil {
-		return [3]string{}, fmt.Errorf("Step 9 (RefreshTable) failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 9 (refreshtable) failed: %v", err)
 	}
 
 	// Run 2 (for dom_ext)
-	// The JS code does this, but then comments out the processing of dom_ext.
-	// We will replicate this behavior.
 	buttonID2, dom2, viewState2, err := client.OpenDate()
 	if err != nil {
-		return [3]string{}, fmt.Errorf("Step 10 (OpenDate 2) failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 10 (opendate 2) failed: %v", err)
 	}
 	
 	_, _, _, _, _, err = client.ClickOK(buttonID2, dom2, viewState2)
 	if err != nil {
-		return [3]string{}, fmt.Errorf("Step 11 (ClickOK 2) failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 11 (clickok 2) failed: %v", err)
 	}
 	
-	fmt.Println("Processing data...")
+	fmt.Println("processing data...")
 	tableRoot := domLoc2.Find(".dataTableInner").First()
 	if tableRoot.Length() == 0 {
-		return [3]string{}, fmt.Errorf("Step 12 (Process): could not find .dataTableInner in final DOM")
+		return [3]string{}, fmt.Errorf("step 12 (process): could not find .dataTableInner in final dom")
 	}
 
-	dataLoc2, err := proceesArray(tableRoot)
+	dataLoc2, err := processArray(tableRoot)
 	if err != nil {
-		return [3]string{}, fmt.Errorf("Step 12 (Process): proceesArray failed: %v", err)
+		return [3]string{}, fmt.Errorf("step 12 (process): processArray failed: %v", err)
 	}
 
-	// dataLoc2[0] = malam, dataLoc2[1] = pagi, dataLoc2[2] = sore
 	castedLoc2Malam, _ := castSampleJSON(dataLoc2[0])
 	castedLoc2Pagi, _ := castSampleJSON(dataLoc2[1])
 	castedLoc2Sore, _ := castSampleJSON(dataLoc2[2])
@@ -971,53 +950,273 @@ func GetData() ([3]string, error) {
 	fmt.Println("Process finished successfully.")
 	return [3]string{finalResultLoc2M, finalResultLoc2P, finalResultLoc2S}, nil
 }
-type Cache struct {
-	Data      [3]string
-	Timestamp time.Time
-	mu        sync.Mutex
+type SampleData struct {
+	Samples map[string]interface{} `json:"samples"`
+	Shift   string                 `json:"shift"`
+}
+type CachedData struct {
+	Samples []Sample `json:"samples"`
+	// add other fields if needed
 }
 
-var cache Cache
-var cacheDuration = 1 * time.Minute
+type ShiftCacheItem struct {
+	Data      string    `json:"data"`
+	Timestamp time.Time `json:"timestamp"`
+}
 
+var (
+	dbFile        = "shift_cache.db"
+	db            *bolt.DB
+	mu            sync.Mutex
+)
 
-func getCachedData() ([3]string, error) {
-	cache.mu.Lock()
-	defer cache.mu.Unlock()
-
-	if time.Since(cache.Timestamp) < cacheDuration {
-		return cache.Data, nil
-	}
-
-	data, err := GetData()
+// initialize BoltDB
+func initDB() error {
+	var err error
+	db, err = bolt.Open(dbFile, 0600, nil)
 	if err != nil {
-		return [3]string{}, err
+		return err
+	}
+	// Ensure bucket exists
+	return db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte("shifts"))
+		return err
+	})
+}
+
+// close database
+func closeDB() {
+	if db != nil {
+		db.Close()
+	}
+}
+
+// utility
+func isSamplesEmpty(jsonStr string) bool {
+	var data SampleData
+	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
+		return true
+	}
+	return len(data.Samples) == 0
+}
+
+// key format: shiftIndex + date (e.g. "0_2025-11-05")
+func makeKey(index int, date time.Time) string {
+	return fmt.Sprintf("%d_%s", index, date.Format("2006-01-02"))
+}
+
+func saveSampleData(index int, data string) error {
+	item := ShiftCacheItem{
+		Data:      data,
+		Timestamp: time.Now(),
 	}
 
-	cache.Data = data
-	cache.Timestamp = time.Now()
-	return cache.Data, nil
+	encoded, err := json.Marshal(item)
+	if err != nil {
+		return err
+	}
+
+	key := makeKey(index, time.Now())
+
+	return db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("shifts"))
+		return b.Put([]byte(key), encoded)
+	})
 }
 
-func main() {
-	http.HandleFunc("/malam", handleShift(0))
-	http.HandleFunc("/pagi", handleShift(1))
-	http.HandleFunc("/sore", handleShift(2))
+// load shift data for today or previous day if available
+func loadSampleData(index int) (string, bool, error) {
+	var item ShiftCacheItem
+	now := time.Now()
+	todayKey := makeKey(index, now)
+	yesterdayKey := makeKey(index, now.Add(-24*time.Hour))
 
-	fmt.Println("Server running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	found := false
+	var raw []byte
+
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("shifts"))
+		raw = b.Get([]byte(todayKey))
+		if raw == nil {
+			raw = b.Get([]byte(yesterdayKey))
+		}
+		if raw == nil {
+			return nil
+		}
+		found = true
+		return json.Unmarshal(raw, &item)
+	})
+
+	if err != nil {
+		return "", false, err
+	}
+	if !found || isSamplesEmpty(item.Data) {
+		return "", false, nil
+	}
+	return item.Data, true, nil
 }
 
-func handleShift(index int) http.HandlerFunc {
+func getCachedData(index int) (string, error) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	cachedStr, found, err := loadSampleData(index)
+	if err != nil {
+		return "", err
+	}
+
+	if found {
+		var cachedMap map[string]interface{}
+		err := json.Unmarshal([]byte(cachedStr), &cachedMap);
+		if  err != nil {
+			fmt.Println("⚠️ Failed to parse cached JSON:", err)
+		} else {
+			samplesMap, ok := cachedMap["samples"].(map[string]interface{});
+			if ok {
+				if len(samplesMap) > 5 {
+					fmt.Println("✅ Loaded from cache (enough samples)")
+					return cachedStr, nil
+				}
+			} else {
+				fmt.Println("⚠️ cachedMap['samples'] is missing or invalid")
+			}
+		}
+	}
+
+	newData, err := GetData()
+	if err != nil {
+		return "", err
+	}
+	for i := 0; i < 3; i++ {
+		if !isSamplesEmpty(newData[i]) {
+			if err := saveSampleData(i, newData[i]); err != nil {
+				fmt.Println("⚠️ Failed to save cache:", err)
+			}
+		}
+	}
+
+	return newData[index], nil
+}
+var sampleNames = map[string]string{
+		"02101": "Long Residue",
+    "02102": "VGO",
+    "02103": "SPO",
+    "02104": "LMO",
+    "02105": "MMO",
+    "02107": "Short Res",
+    "02201": "Short Res",
+    "02202": "DAO",
+    "02203": "Asphalt",
+    "02301": "Distillate",
+    "02302": "Raffinate",
+    "023C108": "Raffinate C108",
+    "02303": "Extract",
+    "02304": "Feed 023C-106",
+    "02310": "Water to Drain",
+    "02401": "HDT",
+    "02405": "DOR",
+    "02406": "SLack Wax",
+    "02409": "Water to Drain",
+    "02410": "DORT",
+	}
+func getCachedDataCSV(index int) (string, error) {
+	jsonStr, err := getCachedData(index)
+	if err != nil {
+		return "", err
+	}
+
+	var shiftData struct {
+		Samples map[string]interface{} `json:"samples"`
+		Shift   string                 `json:"shift"`
+	}
+
+	if err := json.Unmarshal([]byte(jsonStr), &shiftData); err != nil {
+		return "", fmt.Errorf("failed to decode JSON: %v", err)
+	}
+
+	var sb strings.Builder
+	sb.WriteString("SampleID;SampleName;Property;Value\n")
+
+	// Collect and sort SampleIDs
+	var codes []string
+	for code := range shiftData.Samples {
+		codes = append(codes, code)
+	}
+	sort.Strings(codes)
+
+	for _, code := range codes {
+		paramMapIface := shiftData.Samples[code]
+		paramMap, ok := paramMapIface.(map[string]interface{})
+		if !ok {
+			fmt.Printf("Skipping non-map: %T\n", paramMapIface)
+			continue
+		}
+
+		// Map property -> value
+		propValueMap := make(map[string]string)
+		for paramName, valIface := range paramMap {
+			valMap, ok := valIface.(map[string]interface{})
+			if !ok {
+				continue
+			}
+
+			value := fmt.Sprintf("%v", valMap["value"])
+			unit := fmt.Sprintf("%v", valMap["unit"])
+			if unit != "" {
+				value += " " + unit
+			}
+			propValueMap[paramName] = value
+		}
+
+		// Sort properties
+		var propNames []string
+		for prop := range propValueMap {
+			propNames = append(propNames, prop)
+		}
+		sort.Strings(propNames)
+
+		// Build sorted value slice
+		var sortedValues []string
+		for _, prop := range propNames {
+			sortedValues = append(sortedValues, propValueMap[prop])
+		}
+
+		sampleName := sampleNames[code]
+		if sampleName == "" {
+			sampleName = code // fallback
+		}
+
+		sb.WriteString(fmt.Sprintf(`"%s";"%s";"%s";"%s"`+"\n",
+			code, sampleName, strings.Join(propNames, "#"), strings.Join(sortedValues, "#")))
+	}
+
+	return sb.String(), nil
+}
+
+
+
+func handleSampleJSON(index int) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		results, err := getCachedData()
+		result, err := getCachedData(index)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Error fetching data: %v", err), http.StatusInternalServerError)
 			return
 		}
-		writeJSON(w, results[index])
+		writeJSON(w, result)
 	}
 }
+func handleSampleCSV(index int) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		result, err := getCachedDataCSV(index)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Error generating CSV: %v", err), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(result))
+	}
+}
+
 
 func writeJSON(w http.ResponseWriter, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
@@ -1035,4 +1234,20 @@ func writeJSON(w http.ResponseWriter, data interface{}) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
+}
+
+func main() {
+	if err := initDB(); err != nil {
+		panic(err)
+	}
+	defer closeDB()
+	http.HandleFunc("/malam", handleSampleJSON(0))
+	http.HandleFunc("/pagi", handleSampleJSON(1))
+	http.HandleFunc("/sore", handleSampleJSON(2))
+	http.HandleFunc("/malamcsv", handleSampleCSV(0))
+	http.HandleFunc("/pagicsv", handleSampleCSV(1))
+	http.HandleFunc("/sorecsv", handleSampleCSV(2))
+
+	fmt.Println("Server running on http://localhost:53238")
+	log.Fatal(http.ListenAndServe(":53238", nil))
 }
