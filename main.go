@@ -1106,22 +1106,64 @@ var sampleNames = map[string]string{
     "02103": "SPO",
     "02104": "LMO",
     "02105": "MMO",
-    "02107": "Short Res",
-    "02201": "Short Res",
+    "02107": "Short Residue",
+    "02201": "Short Residue",
     "02202": "DAO",
     "02203": "Asphalt",
     "02301": "Distillate",
     "02302": "Raffinate",
     "023C108": "Raffinate C108",
     "02303": "Extract",
-    "02304": "Feed 023C-106",
+    "02304": "Feed 023C-105",
     "02310": "Water to Drain",
     "02401": "HDT",
     "02405": "DOR",
     "02406": "SLack Wax",
+	"02407": "Dry Solvent",
+	"02408": "Wet Solvent",
     "02409": "Water to Drain",
     "02410": "DORT",
+	"025F101": "Hot Oil 025F-101",
 	}
+func getCachedDataJSON(index int) (string, error) {
+	jsonStr, err := getCachedData(index)
+	if err != nil {
+		return "", err
+	}
+
+	// Parse JSON
+	var data map[string]interface{}
+	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
+		return "", fmt.Errorf("failed to unmarshal JSON: %w", err)
+	}
+
+	samples, ok := data["samples"].(map[string]interface{})
+	if !ok {
+		return "", fmt.Errorf("invalid samples format")
+	}
+
+	// Inject sample names
+	for code, v := range samples {
+		if name, exists := sampleNames[code]; exists {
+			entry, ok := v.(map[string]interface{})
+			if ok {
+				entry["sampleName"] = name
+				samples[code] = entry
+			}
+		}
+	}
+
+	data["samples"] = samples
+
+	// Convert back to JSON
+	finalJSON, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal JSON: %w", err)
+	}
+
+	return string(finalJSON), nil
+}
+
 func getCachedDataCSV(index int) (string, error) {
 	jsonStr, err := getCachedData(index)
 	if err != nil {
@@ -1200,7 +1242,7 @@ func getCachedDataCSV(index int) (string, error) {
 
 func handleSampleJSON(index int) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		result, err := getCachedData(index)
+		result, err := getCachedDataJSON(index)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Error fetching data: %v", err), http.StatusInternalServerError)
 			return
@@ -1239,6 +1281,24 @@ func writeJSON(w http.ResponseWriter, data interface{}) {
 	}
 }
 
+func enableCORS(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+        if r.Method == "OPTIONS" {
+            w.WriteHeader(http.StatusOK)
+            return
+        }
+
+        next.ServeHTTP(w, r)
+    })
+}
+
+
+
 var logger service.Logger
 
 type program struct {
@@ -1251,14 +1311,23 @@ func (p *program) Start(s service.Service) error {
 		return err
 	}
 
-	http.HandleFunc("/malam", handleSampleJSON(0))
-	http.HandleFunc("/pagi", handleSampleJSON(1))
-	http.HandleFunc("/sore", handleSampleJSON(2))
-	http.HandleFunc("/malamcsv", handleSampleCSV(0))
-	http.HandleFunc("/pagicsv", handleSampleCSV(1))
-	http.HandleFunc("/sorecsv", handleSampleCSV(2))
+	// ✅ Use a custom ServeMux so we can wrap it with CORS
+	mux := http.NewServeMux()
+	mux.HandleFunc("/malam", handleSampleJSON(0))
+	mux.HandleFunc("/pagi", handleSampleJSON(1))
+	mux.HandleFunc("/sore", handleSampleJSON(2))
+	mux.HandleFunc("/malamcsv", handleSampleCSV(0))
+	mux.HandleFunc("/pagicsv", handleSampleCSV(1))
+	mux.HandleFunc("/sorecsv", handleSampleCSV(2))
 
-	p.httpServer = &http.Server{Addr: ":53238"}
+	// ✅ Wrap the mux with your CORS middleware
+	handlerWithCORS := enableCORS(mux)
+
+	// ✅ Assign the wrapped handler to your server
+	p.httpServer = &http.Server{
+		Addr:    ":53238",
+		Handler: handlerWithCORS,
+	}
 
 	go p.run()
 	return nil
