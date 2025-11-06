@@ -1027,12 +1027,10 @@ func saveSampleData(index int, data string) error {
 	})
 }
 
-// load shift data for today or previous day if available
 func loadSampleData(index int) (string, bool, error) {
 	var item ShiftCacheItem
 	now := time.Now()
 	todayKey := makeKey(index, now)
-	yesterdayKey := makeKey(index, now.Add(-24*time.Hour))
 
 	found := false
 	var raw []byte
@@ -1041,18 +1039,15 @@ func loadSampleData(index int) (string, bool, error) {
 		b := tx.Bucket([]byte("shifts"))
 		raw = b.Get([]byte(todayKey))
 		if raw == nil {
-			raw = b.Get([]byte(yesterdayKey))
-		}
-		if raw == nil {
-			return nil
+			return nil // don't load yesterday here anymore
 		}
 		found = true
 		return json.Unmarshal(raw, &item)
 	})
-
 	if err != nil {
 		return "", false, err
 	}
+
 	if !found || isSamplesEmpty(item.Data) {
 		return "", false, nil
 	}
@@ -1063,6 +1058,7 @@ func getCachedData(index int) (string, error) {
 	mu.Lock()
 	defer mu.Unlock()
 
+	// try loading today's cache only
 	cachedStr, found, err := loadSampleData(index)
 	if err != nil {
 		return "", err
@@ -1070,26 +1066,26 @@ func getCachedData(index int) (string, error) {
 
 	if found {
 		var cachedMap map[string]interface{}
-		err := json.Unmarshal([]byte(cachedStr), &cachedMap);
-		if  err != nil {
+		if err := json.Unmarshal([]byte(cachedStr), &cachedMap); err != nil {
 			fmt.Println("⚠️ Failed to parse cached JSON:", err)
-		} else {
-			samplesMap, ok := cachedMap["samples"].(map[string]interface{});
-			if ok {
-				if len(samplesMap) > 5 {
-					fmt.Println("✅ Loaded from cache (enough samples)")
-					return cachedStr, nil
-				}
-			} else {
-				fmt.Println("⚠️ cachedMap['samples'] is missing or invalid")
+		} else if samplesMap, ok := cachedMap["samples"].(map[string]interface{}); ok {
+			if len(samplesMap) > 5 {
+				fmt.Println("✅ Loaded from today's cache (enough samples)")
+				return cachedStr, nil
 			}
+			fmt.Println("⚠️ Cache found but too few samples:", len(samplesMap))
+		} else {
+			fmt.Println("⚠️ Invalid cache format (no 'samples' field)")
 		}
 	}
 
+	// cache not found or insufficient → fetch new data
+	fmt.Println("🔄 Fetching new data...")
 	newData, err := GetData()
 	if err != nil {
 		return "", err
 	}
+
 	for i := 0; i < 3; i++ {
 		if !isSamplesEmpty(newData[i]) {
 			if err := saveSampleData(i, newData[i]); err != nil {
@@ -1237,8 +1233,110 @@ func getCachedDataCSV(index int) (string, error) {
 
 	return sb.String(), nil
 }
+func getAllStoredDataJSON() (string, error) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	result := make(map[string]interface{})
+
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("shifts"))
+		if b == nil {
+			return fmt.Errorf("bucket 'shifts' not found")
+		}
+
+		return b.ForEach(func(k, v []byte) error {
+			key := string(k)
+
+			var item ShiftCacheItem
+			if err := json.Unmarshal(v, &item); err != nil {
+				fmt.Printf("⚠️ Failed to unmarshal ShiftCacheItem for key %s: %v\n", key, err)
+				return nil
+			}
+
+			var data map[string]interface{}
+			if err := json.Unmarshal([]byte(item.Data), &data); err != nil {
+				fmt.Printf("⚠️ Failed to parse JSON data for key %s: %v\n", key, err)
+				return nil
+			}
+
+			// parse key -> "index_date"
+			parts := strings.SplitN(key, "_", 2)
+			if len(parts) != 2 {
+				fmt.Printf("⚠️ Invalid key format: %s\n", key)
+				return nil
+			}
+
+			indexPart := parts[0]
+			datePart := parts[1]
+
+			// convert index to shift name
+			shiftName := "Unknown"
+			switch indexPart {
+			case "0":
+				shiftName = "Malam"
+			case "1":
+				shiftName = "Pagi"
+			case "2":
+				shiftName = "Sore"
+			}
+
+			// ensure date group exists
+			if _, ok := result[datePart]; !ok {
+				result[datePart] = make(map[string]interface{})
+			}
+
+			dayMap := result[datePart].(map[string]interface{})
+
+			// extract samples
+			samples, ok := data["samples"].(map[string]interface{})
+			if !ok {
+				fmt.Printf("⚠️ No 'samples' field for key %s\n", key)
+				return nil
+			}
+
+			// inject sample names
+			for code, v := range samples {
+				if name, exists := sampleNames[code]; exists {
+					entry, ok := v.(map[string]interface{})
+					if ok {
+						entry["sampleName"] = name
+						samples[code] = entry
+					}
+				}
+			}
+
+			// store under that shift for that date
+			dayMap[shiftName] = samples
+			result[datePart] = dayMap
+
+			return nil
+		})
+	})
+
+	if err != nil {
+		return "", fmt.Errorf("failed to read from DB: %w", err)
+	}
+
+	finalJSON, err := json.MarshalIndent(result, "", "  ")
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal final JSON: %w", err)
+	}
+
+	return string(finalJSON), nil
+}
 
 
+func handleJSONAll() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		result, err := getAllStoredDataJSON()
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Error fetching data: %v", err), http.StatusInternalServerError)
+			return
+		}
+		writeJSON(w, result)
+	}
+}
 
 func handleSampleJSON(index int) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -1316,6 +1414,7 @@ func (p *program) Start(s service.Service) error {
 	mux.HandleFunc("/malam", handleSampleJSON(0))
 	mux.HandleFunc("/pagi", handleSampleJSON(1))
 	mux.HandleFunc("/sore", handleSampleJSON(2))
+	mux.HandleFunc("/all", handleJSONAll())
 	mux.HandleFunc("/malamcsv", handleSampleCSV(0))
 	mux.HandleFunc("/pagicsv", handleSampleCSV(1))
 	mux.HandleFunc("/sorecsv", handleSampleCSV(2))
