@@ -12,6 +12,7 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"os"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -79,6 +80,9 @@ type LimsClient struct {
 	tableIDs    []string
 	popupIDs    []string
 	viewGUID    string
+	scriptSrc   string
+	reqURL	 string
+	csrfToken   string
 }
 
 // NewLimsClient creates a new client with a cookie jar
@@ -167,7 +171,9 @@ func (c *LimsClient) LoginForm(username, password string) error {
 		return err
 	}
 	defer resp.Body.Close()
-
+	// bodyBytes, _ := io.ReadAll(resp.Body)
+	// var respp = string(bodyBytes)
+	// fmt.Println(respp)
 	// // Expecting a 302 Redirect
 	// if resp.StatusCode != http.StatusFound {
 	// 	return fmt.Errorf("LoginForm: bad status: %s (expected 302)", resp.Status)
@@ -200,7 +206,7 @@ func (c *LimsClient) MainPage() error {
 	req.Header.Set("Host", "apps.pertamina.com")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0")
 	req.Header.Set("Referer", "https://apps.pertamina.com/LIMS/login.htm")
-	req.Header.Set("Cookie", fmt.Sprintf("%s ec_aurl=L0xJTVMvbG9naW4uaHRt; lims_dsNameCookie=LabWareV6Prod; queryStringCookie=ec_eid=onclick&ec_cid=loginForm%%3AlogButton", c.jsession))
+	req.Header.Set("Cookie", fmt.Sprintf("%s ec_aurl=L0xJTVMvZXJyb3IuaHRt; lims_dsNameCookie=LABWARE_PROD; queryStringCookie=ec_eid=onclick&ec_cid=loginForm%%3AlogButton", c.jsession))
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -212,6 +218,10 @@ func (c *LimsClient) MainPage() error {
 		return fmt.Errorf("MainPage: bad status: %s", resp.Status)
 	}
 
+	// bodyBytes, _ := io.ReadAll(resp.Body)
+	// var respp = string(bodyBytes)
+	// fmt.Println(respp)
+	
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
 		return err
@@ -260,11 +270,62 @@ func (c *LimsClient) MainPage() error {
 	if c.ecAURL == "" {
 		return fmt.Errorf("MainPage: could not find ec_aurl cookie")
 	}
+	scriptSrc, exists := doc.Find(`script[src*="ec_resp"]`).Attr("src")
+	if !exists {
+		return fmt.Errorf("MainPage: could not find script with ec_resp")
+	}
+
+	// The src is relative, make it absolute
+	if strings.HasPrefix(scriptSrc, "/") {
+		scriptSrc = "https://apps.pertamina.com" + scriptSrc
+	}
+	c.scriptSrc = scriptSrc
+	c.reqURL = reqURL
+	fmt.Println("Script URL:", scriptSrc)
 
 	// fmt.Println("Step 3 (MainPage) OK")
 	return nil
 }
 
+func (c *LimsClient) extractcrsf() error {
+	scriptReq, err := http.NewRequest("GET", c.scriptSrc, nil)
+	if err != nil {
+		return err
+	}
+
+	scriptReq.Header.Set("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0")
+	scriptReq.Header.Set("Referer", c.reqURL)
+
+	scriptResp, err := c.httpClient.Do(scriptReq)
+	if err != nil {
+		return err
+	}
+	defer scriptResp.Body.Close()
+
+	if scriptResp.StatusCode != http.StatusOK {
+		return fmt.Errorf("script request failed: %s", scriptResp.Status)
+	}
+
+	scriptBody, err := io.ReadAll(scriptResp.Body)
+	if err != nil {
+		return err
+	}
+
+	scriptData := string(scriptBody)
+
+	// DEBUG: see content
+	fmt.Println("Script response:")
+	fmt.Println(scriptData)
+	re := regexp.MustCompile(`csrfToken\s*:\s*'([^']+)'`)
+	match := re.FindStringSubmatch(scriptData)
+
+	if len(match) > 1 {
+		csrfToken := match[1]
+		c.csrfToken = csrfToken
+		fmt.Println("CSRF Token:", csrfToken)
+	}
+	return nil
+}
 // OpenQuery clicks the first 'DI' menu item to get the table URI
 func (c *LimsClient) OpenQuery() error {
 	// The original JS passes the whole 'all' array, which is a bug.
@@ -280,9 +341,10 @@ func (c *LimsClient) OpenQuery() error {
 	data.Set("mf:workFlowTabPane:sel", c.uid)
 	data.Set("mf:workFlowTabPane_clPane", c.uid)
 	data.Set("mf:workFlowTabPane:_fc_", "")
-	data.Set("lw.viewguid", "ecid_c10d524c1815e8faa82623d4a4b17e67")
+	// data.Set("lw.viewguid", "ecid_c10d524c1815e8faa82623d4a4b17e67")
 	data.Set("javax.faces.ViewState", c.viewState)
 	data.Set("mf", "true")
+	
 
 	reqURL := fmt.Sprintf("https://apps.pertamina.com/LIMS/index.htm?ec_eid=onclick&ec_cid=mf%%3A%s&ec_ajax=true&ts=%d", uriID, time.Now().UnixMilli())
 	req, err := http.NewRequest("POST", reqURL, strings.NewReader(data.Encode()))
@@ -295,8 +357,10 @@ func (c *LimsClient) OpenQuery() error {
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("Origin", "https://apps.pertamina.com")
+	req.Header.Set("csrfToken", c.csrfToken)
 	req.Header.Set("Referer", "https://apps.pertamina.com/LIMS/index.htm?init_weblims=true&ec_eid=onclick&ec_cid=loginForm%3AlogButton")
-	req.Header.Set("Cookie", fmt.Sprintf("%s _ga=GA1.2.1113838315.1658209289; %s lims_dsNameCookie=LabWareV6Prod; queryStringCookie=ec_eid=onclick&ec_cid=loginForm%%3AlogButton", c.jsession, c.ecAURL))
+	//req.Header.Set("Cookie", fmt.Sprintf("_ga=GA1.2.208247498.1757897243; _ga_N1WDB3WDLD=GS2.1.s1762499570$o10$g1$t1762501662$j60$l0$h0; ai_user=Ax3oB|2025-09-08T00:17:20.093Z; %s; %s; lims_dsNameCookie=LABWARE_PROD; queryStringCookie=ec_eid=onclick&ec_cid=loginForm%%3AlogButton", c.jsession, c.ecAURL))
+	req.Header.Set("Cookie", fmt.Sprintf("lw_focus_=X2VjaWQxNzYwMjg5OmZpZWxkX3VpZF9EMDUxODg1N18=; %s; lims_dsNameCookie=LABWARE_PROD; queryStringCookie=logout=true&ec_eid=onclick&ec_cid=loginForm:logButton; ec_aurl=L0xJTVMvZXJyb3IuaHRt; ai_user=Ax3oB|2025-09-08T00:17:20.093Z; _ga=GA1.2.208247498.1757897243; _ga_N1WDB3WDLD=GS2.1.s1762499570$o10$g1$t1762501662$j60$l0$h0", c.jsession))
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -308,8 +372,14 @@ func (c *LimsClient) OpenQuery() error {
 		return fmt.Errorf("OpenQuery: bad status: %s", resp.Status)
 	}
 
-	bodyBytes, _ := io.ReadAll(resp.Body)
+	
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("failed reading body: %v", err)
+	}
 	var ajaxResp AjaxResponse
+	var resppsn =  string(bodyBytes);
+	fmt.Println(resppsn);
 	if err := xml.Unmarshal(bodyBytes, &ajaxResp); err != nil {
 		return fmt.Errorf("OpenQuery: failed to parse XML: %v", err)
 	}
@@ -437,9 +507,10 @@ func (c *LimsClient) OpenDate() (string, *goquery.Document, string, error) {
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0")
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("csrfToken", c.csrfToken)
 	req.Header.Set("Origin", "https://apps.pertamina.com")
 	req.Header.Set("Referer", fmt.Sprintf("https://apps.pertamina.com/LIMS/%s", c.uri))
-	req.Header.Set("Cookie", fmt.Sprintf("%s lims_dsNameCookie=LabWareV6Prod; queryStringCookie=ec_eid=onclick&ec_cid=loginForm%%3AlogButton; ec_aurl=L1dlYkxJTVMvZXJyb3IuaHRt;", c.jsession))
+	req.Header.Set("Cookie", fmt.Sprintf("%s lims_dsNameCookie=LABWARE_PROD; queryStringCookie=ec_eid=onclick&ec_cid=loginForm%%3AlogButton; ec_aurl=L0xJTVMvZXJyb3IuaHRt;", c.jsession))
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -552,6 +623,7 @@ func (c *LimsClient) ClickOK(buttonID string, dom *goquery.Document, viewState s
 	req.Header.Set("Host", "apps.pertamina.com")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36")
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("csrfToken", c.csrfToken)
 	req.Header.Set("Referer", fmt.Sprintf("https://apps.pertamina.com/LIMS/%s", c.uri))
 	req.Header.Set("Cookie", fmt.Sprintf("%s ec_aurl=L1dlYkxJTVMvZXJyb3IuaHRt; lims_dsNameCookie=LabWareV6Prod; queryStringCookie=ec_eid=onclick&ec_cid=loginForm%%3AlogButton; lw_focus_=%s; ec_focus=%s", c.jsession, lwfocus, ecfocus))
 	
@@ -841,11 +913,17 @@ func processArray(arrayIn *goquery.Selection) ([][]Sample, error) {
 		// --- END FIX ---
 
 		// Date parsing: "11/05/2025 12:00:51 AM"
-		date, err := time.Parse("01/02/2006 03:04:05 PM", dateStr)
+		layout := "2006-01-02 15:04:05"
+		layout1 := "01/02/2006 03:04:05 PM"
+		layout2 := "02-Jan-2006"
+		date, err := time.Parse(layout, dateStr)
 		if err != nil {
-			date, err = time.Parse("02-Jan-2006", dateStr)
+			date, err = time.Parse(layout1, dateStr)
 			if err != nil {
-				date = time.Now() // Use a fallback
+				date, err = time.Parse(layout2, dateStr)
+				if err != nil {
+					date = time.Now()
+				}
 			}
 		}
 
@@ -891,6 +969,10 @@ func GetData() ([3]string, error) {
 	if err := client.MainPage(); err != nil {
 		return [3]string{}, fmt.Errorf("step 3 (mainpage) failed: %v", err)
 	}
+	if err := client.extractcrsf(); err != nil {
+		return [3]string{}, fmt.Errorf("step 3.5 (extractcsrf) failed: %v", err)
+	}
+	
 	
 	if err := client.OpenQuery(); err != nil {
 		return [3]string{}, fmt.Errorf("step 4 (openquery) failed: %v", err)

@@ -1,0 +1,2678 @@
+<!DOCTYPE html>
+
+<html style="height: 100%; overflow: hidden">
+  <head>
+    <title>LABWARE7PROD: LabWare 8 - SUTANTO [CUSTOMER_RU4]</title>
+    <link id="favicon" rel="shortcut icon" href="img/LabWare.ico" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="common/css/lw-theme/jquery-ui-1.13.2.custom.css"
+    />
+    <link rel="stylesheet" type="text/css" href="common/css/jquery.Jcrop.css" />
+    <link rel="stylesheet" type="text/css" href="common/css/labware.css" />
+    <link rel="stylesheet" type="text/css" href="common/css/home.css" />
+    <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.1.13.2.min.js"></script>
+    <script type="text/javascript" src="common/js/jsencrypt.js"></script>
+    <script
+      language="JavaScript"
+      src="labware.js"
+      type="text/javascript"
+    ></script>
+    <style type="text/css"></style>
+  </head>
+  <body
+    style="margin: 0; padding: 0; height: 100%; overflow: hidden"
+    id="bgcolor-inner"
+    onkeydown="setGlobalEventFlag();checkForLockTimeout()"
+    onload="resetGlobalEventFlag();try{self.focus();}catch(e){};setAppType(false);setupModalLayer();initWindowOKCancel();setupTaskContainerEvents();checkForLockTimeout();setLIMSActivityTimer()"
+    onclick="checkForLockTimeout()"
+    onmousedown="setGlobalEventFlag();"
+  >
+    <div id="ec_safari_event_wrapper_div" style="width: 100%; height: 100%">
+      <script
+        language="JavaScript"
+        type="text/javascript"
+        src="/LIMS/index.htm?ec_resp=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.WyJlY3J1aXNlci5zY3JpcHQuZnJhbWV3b3JrLkZyYW1ld29ya0dyb3VwIixbXV0.jnMXe0fZQmxBpTZkGxr2t1A9sbKMyDmyWUp4MW-Oiis&amp;ts=1763946432597&amp;loc=en"
+      ></script>
+      <form
+        id="mf"
+        action="/LIMS/index.htm"
+        method="post"
+        onsubmit="return false"
+        style="display: block; margin: 0; padding: 0; width: 100%; height: 100%"
+      >
+        <span id="mf:fkey"></span>
+        <script language="JavaScript" type="text/JavaScript">
+          ec.evt.addKeyStroke("mf:fkey", "F1", function(event){return ec.er(this,'onkeydown',true,null,'ec_ks=F1&ec_eparm=F1',null,event)}, null, null, true);ec.evt.addKeyStroke("mf:fkey", "F2", function(event){return ec.er(this,'onkeydown',true,null,'ec_ks=F2&ec_eparm=F2',null,event)}, null, null, true);ec.evt.addKeyStroke("mf:fkey", "F7", function(event){return ec.er(this,'onkeydown',true,null,'ec_ks=F7&ec_eparm=F7',null,event)}, null, null, true);ec.evt.addKeyStroke("mf:fkey", "F8", function(event){return ec.er(this,'onkeydown',true,null,'ec_ks=F8&ec_eparm=F8',null,event)}, null, null, true);ec.evt.addKeyStroke("mf:fkey", "F5", function(event){return ec.er(this,'onkeydown',true,null,'ec_ks=F5&ec_eparm=F5',null,event)}, null, null, true);ec.evt.addKeyStroke("mf:fkey", "F6", function(event){return ec.er(this,'onkeydown',true,null,'ec_ks=F6&ec_eparm=F6',null,event)}, null, null, true);ec.evt.addKeyStroke("mf:fkey", "F10", function(event){return ec.er(this,'onkeydown',true,null,'ec_ks=F10&ec_eparm=F10',null,event)}, null, null, true);
+        </script>
+        <span id="mf:cfgparams"></span>
+        <script language="JavaScript" type="text/javascript">
+          isLockTimeout = false;
+          lockTimeout = 0;
+          sessionTimeoutMins = 25;
+          limsActTimeout = 60000;
+          isSSOLogin = false;
+          appName = "weblims";
+        </script>
+        <div class="top-bar clearfix">
+          <div id="home-tb-toggle" class="home-tb-toggle-expanded"></div>
+          <div
+            id="mf:mainMenu"
+            class="homeMenuBar"
+            style="overflow: hidden; position: relative"
+          >
+            <a
+              id="mf:_ecid1706173"
+              style="display: none; position: absolute; cursor: pointer"
+              href="javascript:void(0)"
+              ><img
+                id="mf:_ecid1706173_i"
+                nSrc="/LIMS/ecimg.htm?id=/arrow/lb.gif"
+                src="/LIMS/ecimg.htm?id=/arrow/lb.gif"
+                dSrc="/LIMS/ecimg.htm?id=/arrow/lbd.gif"
+                border="0" /></a
+            ><a
+              id="mf:_ecid1706174"
+              style="display: none; position: absolute; cursor: pointer"
+              href="javascript:void(0)"
+              ><img
+                id="mf:_ecid1706174_i"
+                nSrc="/LIMS/ecimg.htm?id=/arrow/rb.gif"
+                src="/LIMS/ecimg.htm?id=/arrow/rb.gif"
+                dSrc="/LIMS/ecimg.htm?id=/arrow/rbd.gif"
+                border="0"
+            /></a>
+            <table
+              cellpadding="0"
+              cellspacing="0"
+              style="vertical-align: middle"
+            >
+              <tr>
+                <td>
+                  <div id="mf:_uid_978AAC06_" class="tc" mc="true">
+                    <span class="tcl">&nbsp;</span
+                    ><span class="tct">Recent</span
+                    ><span class="tcs">&nbsp;</span
+                    ><span class="tcr"
+                      ><div id="mf:_uid_978AAC06_:cnt" mcc="true" class="sub">
+                        <div
+                          id="mf:_uid_6EF3A220_"
+                          class="mc"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Data Explorer</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr"
+                            ><img
+                              src="/LIMS/ecimg.htm?id=/arrow/bra.gif"
+                              nSrc="src"
+                              dSrc="src"
+                            />
+                            <div
+                              id="mf:_uid_6EF3A220_:cnt"
+                              mcc="true"
+                              class="sub"
+                            >
+                              <div
+                                id="mf:_uid_68A18565_"
+                                class="mc"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct">1. EXT</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_B3CFF4FF_"
+                                class="mc"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct">2. DI</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                            </div></span
+                          >
+                        </div>
+                        <div
+                          id="mf:_uid_3D5AEF34_"
+                          class="mc"
+                          mm="c"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>C</u>lear</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                      </div></span
+                    >
+                  </div>
+                </td>
+                <td>
+                  <div id="mf:_uid_7EDF0911_" class="tc" mm="f" mc="true">
+                    <span class="tcl">&nbsp;</span
+                    ><span class="tct"><u>F</u>ile</span
+                    ><span class="tcs">&nbsp;</span
+                    ><span class="tcr"
+                      ><div id="mf:_uid_7EDF0911_:cnt" mcc="true" class="sub">
+                        <div
+                          id="mf:_uid_39A6FB83_"
+                          class="mcd"
+                          mm="f"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbfoldermanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>F</u>older Manager...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_84FC3719_"
+                          class="mcd"
+                          mm="r"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbprojectmanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">P<u>r</u>oject Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_16B07498_"
+                          class="mc"
+                          mm="p"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbprintlabels.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>P</u>rint Label(s)...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_717F8F6D_"
+                          class="mc"
+                          mm="t"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_openreport.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Open Repor<u>t</u>...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_D66049AA_"
+                          class="mc"
+                          mm="i"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_importfile.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>I</u>mport File...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_E63AABFE_"
+                          class="mcd"
+                          mm="i"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tblogin.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Log <u>I</u>n...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_78A94766_"
+                          class="mc"
+                          mm="o"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tblogout.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Log <u>O</u>ut</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_1343E583_"
+                          class="mc"
+                          ms="true"
+                          mc="true"
+                        >
+                          <div class="sep"></div>
+                        </div>
+                        <div
+                          id="mf:_uid_47C95051_"
+                          class="mc"
+                          mm="x"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbexit.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">E<u>x</u>it</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_7C1F7133_"
+                          class="mcd"
+                          mm="b"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Address <u>B</u>ook</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_41437B6F_"
+                          class="mc"
+                          mm="a"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbalertmanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>A</u>lert Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_88BE1A75_"
+                          class="mcd"
+                          mm="a"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_approvalmanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>A</u>pproval Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_387145FA_"
+                          class="mcd"
+                          mm="b"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbbatchmanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>B</u>atch Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_5B8B0E72_"
+                          class="mcd"
+                          mm="c"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbcontactmanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>C</u>ontact Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_FA634A60_"
+                          class="mc"
+                          mm="d"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbexploretables.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>D</u>ata Explorer</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_76A45FBC_"
+                          class="mcd"
+                          mm="v"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_inventorymanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">In<u>v</u>entory Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_4E674580_"
+                          class="mcd"
+                          mm="i"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_investigationmanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>I</u>nvestigation Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_04A76BD3_"
+                          class="mcd"
+                          mm="w"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">File Bro<u>w</u>ser</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_833B70E9_"
+                          class="mcd"
+                          mm="l"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tblotmanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>L</u>ot Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_29545175_"
+                          class="mc"
+                          mm="m"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>M</u>essage Window</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_C7B7DF48_"
+                          class="mcd"
+                          mm="j"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbfoldermanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Ob<u>j</u>ect Group Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_67F90FBD_"
+                          class="mcd"
+                          mm="o"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>O</u>rder Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_C9A69B1B_"
+                          class="mcd"
+                          mm="r"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Sample <u>R</u>ules Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_A2675E54_"
+                          class="mcd"
+                          mm="d"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">P<u>D</u>F Window</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_3291D4E4_"
+                          class="mcd"
+                          mm="q"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbstoredquerymanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"
+                            >Stored <u>Q</u>uery Manager...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_51D10F16_"
+                          class="mcd"
+                          mm="w"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_worksheetmanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>W</u>orksheet Window</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_20783B2F_"
+                          class="mcd"
+                          mm="k"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Open Wor<u>k</u>sheet</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                      </div></span
+                    >
+                  </div>
+                </td>
+                <td>
+                  <div id="mf:_uid_8243D1A1_" class="tc" mm="c" mc="true">
+                    <span class="tcl">&nbsp;</span
+                    ><span class="tct"><u>C</u>onfigure</span
+                    ><span class="tcs">&nbsp;</span
+                    ><span class="tcr"
+                      ><div id="mf:_uid_8243D1A1_:cnt" mcc="true" class="sub">
+                        <div
+                          id="mf:_uid_1301811C_"
+                          class="mc"
+                          mm="p"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_changepassword.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Change <u>P</u>assword...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_90B2F7E3_"
+                          class="mcd"
+                          mm="g"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Assign <u>G</u>roups...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_8242EA10_"
+                          class="mcd"
+                          mm="t"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbtablemanager.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Manage <u>T</u>ables...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_21DC3301_"
+                          class="mcd"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Rules And Events Manager...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_BBA02216_"
+                          class="mc"
+                          mm="c"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>C</u>onfigure Browse</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr"
+                            ><img
+                              src="/LIMS/ecimg.htm?id=/arrow/bra.gif"
+                              nSrc="src"
+                              dSrc="src"
+                            />
+                            <div
+                              id="mf:_uid_BBA02216_:cnt"
+                              mcc="true"
+                              class="sub"
+                            >
+                              <div
+                                id="mf:_uid_AB0B1774_"
+                                class="mcd"
+                                mm="t"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>T</u>est...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_89AE5129_"
+                                class="mcd"
+                                mm="s"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>S</u>ample...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_825A59E3_"
+                                class="mcd"
+                                mm="p"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>P</u>roject...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                            </div></span
+                          >
+                        </div>
+                        <div
+                          id="mf:_uid_ED68FCB2_"
+                          class="mc"
+                          mm="d"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>D</u>isplay Fields</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr"
+                            ><img
+                              src="/LIMS/ecimg.htm?id=/arrow/bra.gif"
+                              nSrc="src"
+                              dSrc="src"
+                            />
+                            <div
+                              id="mf:_uid_ED68FCB2_:cnt"
+                              mcc="true"
+                              class="sub"
+                            >
+                              <div
+                                id="mf:_uid_E8611C0F_"
+                                class="mcd"
+                                mm="t"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>T</u>est...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_7595EACD_"
+                                class="mcd"
+                                mm="s"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_blankbitmapwithextent32x32.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"><u>S</u>ample...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                            </div></span
+                          >
+                        </div>
+                        <div
+                          id="mf:_uid_9AADA043_"
+                          class="mc"
+                          mm="l"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"
+                            >External <u>L</u>ink Directories</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr"
+                            ><img
+                              src="/LIMS/ecimg.htm?id=/arrow/bra.gif"
+                              nSrc="src"
+                              dSrc="src"
+                            />
+                            <div
+                              id="mf:_uid_9AADA043_:cnt"
+                              mcc="true"
+                              class="sub"
+                            >
+                              <div
+                                id="mf:_uid_C9550A22_"
+                                class="mcd"
+                                mm="r"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>R</u>eports...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_8A89E67E_"
+                                class="mcd"
+                                mm="s"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>S</u>tatic Data...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_9F061860_"
+                                class="mcd"
+                                mm="d"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>D</u>ynamic Data...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_C9274320_"
+                                class="mcd"
+                                mm="v"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"
+                                  ><u>V</u>isual Workflow Files...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_B45A6DA3_"
+                                class="mcd"
+                                mm="w"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"
+                                  ><u>W</u>orksheet Files...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                            </div></span
+                          >
+                        </div>
+                        <div
+                          id="mf:_uid_99E91AC2_"
+                          class="mc"
+                          mm="u"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Certify <u>U</u>sers</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr"
+                            ><img
+                              src="/LIMS/ecimg.htm?id=/arrow/bra.gif"
+                              nSrc="src"
+                              dSrc="src"
+                            />
+                            <div
+                              id="mf:_uid_99E91AC2_:cnt"
+                              mcc="true"
+                              class="sub"
+                            >
+                              <div
+                                id="mf:_uid_6EBB8CD1_"
+                                class="mcd"
+                                mm="a"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>A</u>nalyses...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_E4A6591E_"
+                                class="mcd"
+                                mm="i"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>I</u>nstruments...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                            </div></span
+                          >
+                        </div>
+                        <div
+                          id="mf:_uid_559AC20D_"
+                          class="mc"
+                          mm="h"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Sc<u>h</u>eduler</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr"
+                            ><img
+                              src="/LIMS/ecimg.htm?id=/arrow/bra.gif"
+                              nSrc="src"
+                              dSrc="src"
+                            />
+                            <div
+                              id="mf:_uid_559AC20D_:cnt"
+                              mcc="true"
+                              class="sub"
+                            >
+                              <div
+                                id="mf:_uid_35F43A8E_"
+                                class="mcd"
+                                mm="r"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>R</u>eports...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_20F13E64_"
+                                class="mcd"
+                                mm="s"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>S</u>amples...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_626758BF_"
+                                class="mcd"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct">Basic...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_CC41C696_"
+                                class="mcd"
+                                mm="c"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_tbcalendarscheduler.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"><u>C</u>alendar...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_12B5ED27_"
+                                class="mcd"
+                                mm="h"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>H</u>oliday...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_D7EBFFA6_"
+                                class="mcd"
+                                mm="w"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"
+                                  >Schedule <u>W</u>indow...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                            </div></span
+                          >
+                        </div>
+                        <div
+                          id="mf:_uid_2B729380_"
+                          class="mc"
+                          mm="y"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">S<u>y</u>stem</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr"
+                            ><img
+                              src="/LIMS/ecimg.htm?id=/arrow/bra.gif"
+                              nSrc="src"
+                              dSrc="src"
+                            />
+                            <div
+                              id="mf:_uid_2B729380_:cnt"
+                              mcc="true"
+                              class="sub"
+                            >
+                              <div
+                                id="mf:_uid_F6BEE71F_"
+                                class="mcd"
+                                mm="s"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>S</u>erver...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_64AD5E99_"
+                                class="mcd"
+                                mm="s"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"
+                                  ><u>S</u>end an alert to all logged in
+                                  users</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_2B326A37_"
+                                class="mcd"
+                                mm="l"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>L</u>ogins...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                            </div></span
+                          >
+                        </div>
+                        <div
+                          id="mf:_uid_1EC2A33B_"
+                          class="mcd"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Change Signing Password...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_626C575C_"
+                          class="mcd"
+                          mm="m"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>M</u>enus and Toolbar...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_D8A4D82B_"
+                          class="mcd"
+                          mm="x"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbexploretables.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">E<u>x</u>plore Tables...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_6B182296_"
+                          class="mcd"
+                          mm="q"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">HTML <u>Q</u>uery Tags...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_AD513AC0_"
+                          class="mcd"
+                          mm="r"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_notebookreferences.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Notebook <u>R</u>eferences...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_457F4A98_"
+                          class="mcd"
+                          mm="n"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_notebooks.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>N</u>otebooks...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_57CA6788_"
+                          class="mcd"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbprocessscheduler.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Parent Child Record Editor...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_ABC41B61_"
+                          class="mcd"
+                          mm="p"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Modify <u>P</u>roduct Specs</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_A75A191F_"
+                          class="mc"
+                          mm="i"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Set S<u>i</u>gnature File...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_E741BEFF_"
+                          class="mcd"
+                          mm="f"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_modifyproductspecs.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"
+                            >Speci<u>f</u>ications Designer...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                      </div></span
+                    >
+                  </div>
+                </td>
+                <td>
+                  <div id="mf:_uid_0C3F17B3_" class="tc" mm="r" mc="true">
+                    <span class="tcl">&nbsp;</span
+                    ><span class="tct"><u>R</u>un</span
+                    ><span class="tcs">&nbsp;</span
+                    ><span class="tcr"
+                      ><div id="mf:_uid_0C3F17B3_:cnt" mcc="true" class="sub">
+                        <div
+                          id="mf:_uid_9A763AA3_"
+                          class="mc"
+                          mm="l"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>L</u>og Samples</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr"
+                            ><img
+                              src="/LIMS/ecimg.htm?id=/arrow/bra.gif"
+                              nSrc="src"
+                              dSrc="src"
+                            />
+                            <div
+                              id="mf:_uid_9A763AA3_:cnt"
+                              mcc="true"
+                              class="sub"
+                            >
+                              <div
+                                id="mf:_uid_6B0368B1_"
+                                class="mcd"
+                                mm="b"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_tblogsamples.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct">Log <u>B</u>atch...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_C709DBFC_"
+                                class="mc"
+                                mm="s"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_tblogsample.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"><u>S</u>ample Login...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_F3D9BAB3_"
+                                class="mc"
+                                mm="s"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"
+                                  >Log From <u>S</u>ample...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_A907E39C_"
+                                class="mcd"
+                                mm="r"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_tbresample.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"><u>R</u>esample...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_C136453F_"
+                                class="mc"
+                                mm="d"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_gridlogin.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct">Gri<u>d</u> Login...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_6608B582_"
+                                class="mc"
+                                mm="g"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_tbgrouplogin.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"><u>G</u>roup Login...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                            </div></span
+                          >
+                        </div>
+                        <div
+                          id="mf:_uid_D5C1777C_"
+                          class="mc"
+                          mm="m"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>M</u>odify Samples</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr"
+                            ><img
+                              src="/LIMS/ecimg.htm?id=/arrow/bra.gif"
+                              nSrc="src"
+                              dSrc="src"
+                            />
+                            <div
+                              id="mf:_uid_D5C1777C_:cnt"
+                              mcc="true"
+                              class="sub"
+                            >
+                              <div
+                                id="mf:_uid_A6EAD50C_"
+                                class="mcd"
+                                mm="r"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_receivesample.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"><u>R</u>eceive...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_862E3DC0_"
+                                class="mcd"
+                                mm="u"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>U</u>n-Receive...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_88A30A81_"
+                                class="mcd"
+                                mm="p"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_preparesample.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"
+                                  ><u>P</u>repare Samples...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_9BCD794C_"
+                                class="mcd"
+                                mm="i"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_tbviewchainofcustody.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"
+                                  >Cha<u>i</u>n of Custody...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_473B6BB2_"
+                                class="mcd"
+                                mm="a"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_tbmakesamplealiquot.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"><u>A</u>liquot...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_21412A75_"
+                                class="mcd"
+                                mm="c"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_cancelsamples.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"><u>C</u>ancel...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_79587E81_"
+                                class="mcd"
+                                mm="o"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_tbrestoresamples.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct">Rest<u>o</u>re...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_EF054D41_"
+                                class="mcd"
+                                mm="v"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_reactivatesamples.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct">Reacti<u>v</u>ate...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_62639BFD_"
+                                class="mcd"
+                                mm="g"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_tbchangesamplelocation.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"
+                                  >Chan<u>g</u>e Location...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_A8507346_"
+                                class="mcd"
+                                mm="t"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_setprioritydate.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"
+                                  >Se<u>t</u> Priority/Date...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_9600555E_"
+                                class="mc"
+                                mm="d"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_tbviewsampleaudithistory.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct">Au<u>d</u>it History...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_EFB20A00_"
+                                class="mcd"
+                                mm="r"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_fullreactivatesamples.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct"
+                                  >Full <u>R</u>eactivate...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_4D6E6CD0_"
+                                class="mcd"
+                                mm="n"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct">U<u>n</u>-Release...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                            </div></span
+                          >
+                        </div>
+                        <div
+                          id="mf:_uid_B2CE428D_"
+                          class="mc"
+                          mm="h"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">C<u>h</u>arge</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr"
+                            ><img
+                              src="/LIMS/ecimg.htm?id=/arrow/bra.gif"
+                              nSrc="src"
+                              dSrc="src"
+                            />
+                            <div
+                              id="mf:_uid_B2CE428D_:cnt"
+                              mcc="true"
+                              class="sub"
+                            >
+                              <div
+                                id="mf:_uid_A715C766_"
+                                class="mcd"
+                                mm="t"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl">&nbsp;</span
+                                ><span class="mct"><u>T</u>ests...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                              <div
+                                id="mf:_uid_3DCF1B24_"
+                                class="mcd"
+                                mm="m"
+                                mc="true"
+                                onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                                cellDisabled="true"
+                              >
+                                <span class="mcl"
+                                  ><img
+                                    src="images/task_tbchargetime.gif"
+                                    nSrc="src"
+                                    dSrc="src" /></span
+                                ><span class="mct">Ti<u>m</u>e...</span
+                                ><span class="mcs">&nbsp;</span
+                                ><span class="mcr">&nbsp;</span>
+                              </div>
+                            </div></span
+                          >
+                        </div>
+                        <div
+                          id="mf:_uid_DF776D3A_"
+                          class="mc"
+                          mm="w"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbviewsamples.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Vie<u>w</u> Samples...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_A3B07424_"
+                          class="mc"
+                          mm="t"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbedittests.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Edit <u>T</u>ests...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_20F3D95F_"
+                          class="mcd"
+                          mm="e"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbenterresults.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>E</u>nter Results...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_85845746_"
+                          class="mc"
+                          mm="r"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbreports.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>R</u>eports...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_4B6477B4_"
+                          class="mcd"
+                          mm="v"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbreviewsamples.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Re<u>v</u>iew...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_444206C2_"
+                          class="mcd"
+                          mm="m"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbmanageinstruments.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>M</u>anage Instruments...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_CFDE8793_"
+                          class="mcd"
+                          mm="s"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbmanagestandardsreagents.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"
+                            >Manage <u>S</u>tandard and Reagents...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_5A397DBE_"
+                          class="mcd"
+                          mm="f"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>F</u>lags...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_AEB851CB_"
+                          class="mc"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Lock Session</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_9F4F3DBE_"
+                          class="mcd"
+                          mm="a"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_releasesamples.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct">Rele<u>a</u>se...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                      </div></span
+                    >
+                  </div>
+                </td>
+                <td>
+                  <div id="mf:_uid_A21A047D_" class="tc" mm="u" mc="true">
+                    <span class="tcl">&nbsp;</span
+                    ><span class="tct"><u>U</u>tilities</span
+                    ><span class="tcs">&nbsp;</span
+                    ><span class="tcr"
+                      ><div id="mf:_uid_A21A047D_:cnt" mcc="true" class="sub">
+                        <div
+                          id="mf:_uid_98DC358E_"
+                          class="mcd"
+                          mm="c"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>C</u>hanges Manager...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_C596BBE5_"
+                          class="mcd"
+                          mm="d"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>D</u>BMT...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_41E7C19A_"
+                          class="mcd"
+                          mm="m"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Data Base <u>M</u>apping...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_67B169F1_"
+                          class="mcd"
+                          mm="i"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Run <u>I</u>nstaller...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_8681458A_"
+                          class="mc"
+                          mm="n"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>N</u>LS Differences...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_24F5A2DA_"
+                          class="mc"
+                          mm="l"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">NLS <u>L</u>ogging</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_5D051128_"
+                          class="mc"
+                          mm="s"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">XML <u>S</u>chema</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_10E18D3A_"
+                          class="mc"
+                          mm="v"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">XML <u>V</u>iewer...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_9986927E_"
+                          class="mc"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">LIMS Log Manager</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                      </div></span
+                    >
+                  </div>
+                </td>
+                <td>
+                  <div id="mf:_uid_C8CDC7DB_" class="tc" mm="s" mc="true">
+                    <span class="tcl">&nbsp;</span
+                    ><span class="tct"><u>S</u>earch</span
+                    ><span class="tcs">&nbsp;</span><span class="tcr"></span>
+                  </div>
+                </td>
+                <td>
+                  <div id="mf:_uid_A4894888_" class="tc" mm="h" mc="true">
+                    <span class="tcl">&nbsp;</span
+                    ><span class="tct"><u>H</u>elp</span
+                    ><span class="tcs">&nbsp;</span
+                    ><span class="tcr"
+                      ><div id="mf:_uid_A4894888_:cnt" mcc="true" class="sub">
+                        <div
+                          id="mf:_uid_E2E2CCF7_"
+                          class="mc"
+                          mm="c"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl"
+                            ><img
+                              src="images/task_tbhelpcontents.gif"
+                              nSrc="src"
+                              dSrc="src" /></span
+                          ><span class="mct"><u>C</u>ontents</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_CCC201B5_"
+                          class="mc"
+                          ms="true"
+                          mc="true"
+                        >
+                          <div class="sep"></div>
+                        </div>
+                        <div
+                          id="mf:_uid_F41370D1_"
+                          class="mc"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Find LabTrack Number...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_7BA4864D_"
+                          class="mcd"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                          cellDisabled="true"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Create Support LOG...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_022D752D_"
+                          class="mc"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">LabWare Support Page...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_629672AD_"
+                          class="mc"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">LabWare Home Page...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_34414BE5_"
+                          class="mc"
+                          ms="true"
+                          mc="true"
+                        >
+                          <div class="sep"></div>
+                        </div>
+                        <div
+                          id="mf:_uid_828EF1F2_"
+                          class="mc"
+                          mm="a"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct"><u>A</u>bout...</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                      </div></span
+                    >
+                  </div>
+                </td>
+                <td>
+                  <div id="mf:_uid_95A0E5F0_" class="tc" mc="true">
+                    <span class="tcl">&nbsp;</span
+                    ><span class="tct">Reporting</span
+                    ><span class="tcs">&nbsp;</span
+                    ><span class="tcr"
+                      ><div id="mf:_uid_95A0E5F0_:cnt" mcc="true" class="sub">
+                        <div
+                          id="mf:_uid_F0BC78FD_"
+                          class="mc"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Bulk Report Download</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_A0AAA999_"
+                          class="mc"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Search Report Number</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                        <div
+                          id="mf:_uid_12A8D202_"
+                          class="mc"
+                          mc="true"
+                          onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                        >
+                          <span class="mcl">&nbsp;</span
+                          ><span class="mct">Modify Sample Information</span
+                          ><span class="mcs">&nbsp;</span
+                          ><span class="mcr">&nbsp;</span>
+                        </div>
+                      </div></span
+                    >
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <script language="JavaScript" type="text/JavaScript">
+              ec.comp.create("ec.comp.MenuBar","6",{mnemonicModifier:"alt-shift",horizontal:true,menuCellHoverStyle:"mch",topCellStyle:"tc",topCellDisabledStyle:"tcd",menuCellStyle:"mc",topCellHoverStyle:"tch",menuCellDisabledStyle:"mcd",id:"mf:mainMenu",topCellActiveStyle:"tca",webMode:false});
+            </script>
+          </div>
+        </div>
+        <div id="container">
+          <div class="home-left">
+            <div style="width: 196px; display: block; margin: 14px 14px 0 24px">
+              <img src="img/labware-logo.png" alt="" id="home-logo" />
+              <div class="search">
+                <span id="mf:search"
+                  ><input
+                    id="mf:search_i"
+                    class="search-input"
+                    value=""
+                    name="mf:search:label"
+                    autocomplete="off" /><input type="hidden" name="mf:search"
+                /></span>
+                <script language="JavaScript" type="text/JavaScript">
+                  ec.comp.create("ec.comp.SuggestInput","ZWNydWlzZXIucmVuZGVyLmh0bWwuc2NyaXB0LlN1Z2dlc3RJbnB1dFNjcmlwdA",{matchAnywhere:false,ignoreCase:true,showHeader:false,hoverStyle:'search-suggest-list-hover',matchStyle:'search-suggest-match',id:'mf:search',matchIndexes:[0],labelField:'text'});
+                </script>
+                <script language="JavaScript" type="text/JavaScript">
+                  ec.evt.addKeyStroke("mf:search_i", "13", function(event){return ec.er(this,'onkeydown',true,null,'ec_ks=13&ec_eparm=13',null,event)}, null, null, false);
+                </script>
+                <button
+                  id="mf:_ecid26"
+                  class="search-button"
+                  onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                  type="button"
+                ></button>
+              </div>
+            </div>
+            <!-- Start left menu-->
+            <div class="home-main-toolbar-parent">
+              <div
+                id="mf:mainToolbar"
+                class="main-toolbar"
+                ontoggle="return ec.er(this,'ontoggle',true,null,null,null,event)"
+                style=""
+              >
+                <div class="main-toolbar-pages">
+                  <div class="main-toolbar-page">
+                    <ul class="main-toolbar-row">
+                      <li
+                        class="main-toolbar-cell"
+                        id="mf:_uid_54EBE9A6_"
+                        onrecentsclick="return ec.er(this,'onrecentsclick',true,null,null,null,event)"
+                      >
+                        <a
+                          class="main-toolbar-cell-icon"
+                          href="javascript:void(0)"
+                          id="mf:_uid_54EBE9A6_:anchor"
+                          onclick="if(blockDblClick())return ec.er(this,'onclick',true,null,null,null,event)"
+                          ><img src="images/tbexit.gif" title="Exit" /></a
+                        ><span class="main-toolbar-cell-text">Exit</span>
+                      </li>
+                      <li
+                        class="main-toolbar-cell"
+                        id="mf:_uid_2C9D896C_"
+                        onrecentsclick="return ec.er(this,'onrecentsclick',true,null,null,null,event)"
+                      >
+                        <a
+                          class="main-toolbar-cell-icon"
+                          href="javascript:void(0)"
+                          id="mf:_uid_2C9D896C_:anchor"
+                          onclick="if(blockDblClick())return ec.er(this,'onclick',true,null,null,null,event)"
+                          ><img
+                            src="images/tblogin_disabled.gif"
+                            title="Log In" /></a
+                        ><span class="main-toolbar-cell-text">Log In</span>
+                      </li>
+                      <li
+                        class="main-toolbar-cell"
+                        id="mf:_uid_61956C08_"
+                        onrecentsclick="return ec.er(this,'onrecentsclick',true,null,null,null,event)"
+                      >
+                        <a
+                          class="main-toolbar-cell-icon"
+                          href="javascript:void(0)"
+                          id="mf:_uid_61956C08_:anchor"
+                          onclick="if(blockDblClick())return ec.er(this,'onclick',true,null,null,null,event)"
+                          ><img src="images/tblogout.gif" title="Log Out" /></a
+                        ><span class="main-toolbar-cell-text">Log Out</span>
+                      </li>
+                    </ul>
+                    <ul class="main-toolbar-row">
+                      <li
+                        class="main-toolbar-cell"
+                        id="mf:_uid_BC6E22CD_"
+                        onrecentsclick="return ec.er(this,'onrecentsclick',true,null,null,null,event)"
+                      >
+                        <a
+                          class="main-toolbar-cell-icon"
+                          href="javascript:void(0)"
+                          id="mf:_uid_BC6E22CD_:anchor"
+                          onclick="if(blockDblClick())return ec.er(this,'onclick',true,null,null,null,event)"
+                          ><img
+                            src="images/tbprojectmanager_disabled.gif"
+                            title="Project Manager" /></a
+                        ><span class="main-toolbar-cell-text"
+                          >Project Manager</span
+                        >
+                      </li>
+                      <li
+                        class="main-toolbar-cell"
+                        id="mf:_uid_2A79E056_"
+                        onrecentsclick="return ec.er(this,'onrecentsclick',true,null,null,null,event)"
+                      >
+                        <a
+                          class="main-toolbar-cell-icon"
+                          href="javascript:void(0)"
+                          id="mf:_uid_2A79E056_:anchor"
+                          onclick="if(blockDblClick())return ec.er(this,'onclick',true,null,null,null,event)"
+                          ><img
+                            src="images/tblogsample.gif"
+                            title="Sample Login" /></a
+                        ><span class="main-toolbar-cell-text"
+                          >Sample Login</span
+                        >
+                      </li>
+                      <li
+                        class="main-toolbar-cell"
+                        id="mf:_uid_B511AC22_"
+                        onrecentsclick="return ec.er(this,'onrecentsclick',true,null,null,null,event)"
+                      >
+                        <a
+                          class="main-toolbar-cell-icon"
+                          href="javascript:void(0)"
+                          id="mf:_uid_B511AC22_:anchor"
+                          onclick="if(blockDblClick())return ec.er(this,'onclick',true,null,null,null,event)"
+                          ><img
+                            src="images/tbedittests.gif"
+                            title="Edit Tests" /></a
+                        ><span class="main-toolbar-cell-text">Edit Tests</span>
+                      </li>
+                    </ul>
+                    <ul class="main-toolbar-row">
+                      <li
+                        class="main-toolbar-cell"
+                        id="mf:_uid_61E69792_"
+                        onrecentsclick="return ec.er(this,'onrecentsclick',true,null,null,null,event)"
+                      >
+                        <a
+                          class="main-toolbar-cell-icon"
+                          href="javascript:void(0)"
+                          id="mf:_uid_61E69792_:anchor"
+                          onclick="if(blockDblClick())return ec.er(this,'onclick',true,null,null,null,event)"
+                          ><img
+                            src="images/tbenterresults_disabled.gif"
+                            title="Enter Results" /></a
+                        ><span class="main-toolbar-cell-text"
+                          >Enter Results</span
+                        >
+                      </li>
+                      <li
+                        class="main-toolbar-cell"
+                        id="mf:_uid_DA62FEE3_"
+                        onrecentsclick="return ec.er(this,'onrecentsclick',true,null,null,null,event)"
+                      >
+                        <a
+                          class="main-toolbar-cell-icon"
+                          href="javascript:void(0)"
+                          id="mf:_uid_DA62FEE3_:anchor"
+                          onclick="if(blockDblClick())return ec.er(this,'onclick',true,null,null,null,event)"
+                          ><img src="images/tbreports.gif" title="Reports" /></a
+                        ><span class="main-toolbar-cell-text">Reports</span>
+                      </li>
+                      <li
+                        class="main-toolbar-cell"
+                        id="mf:_uid_EB0482A7_"
+                        onrecentsclick="return ec.er(this,'onrecentsclick',true,null,null,null,event)"
+                      >
+                        <a
+                          class="main-toolbar-cell-icon"
+                          href="javascript:void(0)"
+                          id="mf:_uid_EB0482A7_:anchor"
+                          onclick="if(blockDblClick())return ec.er(this,'onclick',true,null,null,null,event)"
+                          ><img
+                            src="images/tbreviewsamples_disabled.gif"
+                            title="Review" /></a
+                        ><span class="main-toolbar-cell-text">Review</span>
+                      </li>
+                    </ul>
+                    <ul class="main-toolbar-row">
+                      <li
+                        class="main-toolbar-cell"
+                        id="mf:_uid_FFDF52BF_"
+                        onrecentsclick="return ec.er(this,'onrecentsclick',true,null,null,null,event)"
+                      >
+                        <a
+                          class="main-toolbar-cell-icon"
+                          href="javascript:void(0)"
+                          id="mf:_uid_FFDF52BF_:anchor"
+                          onclick="if(blockDblClick())return ec.er(this,'onclick',true,null,null,null,event)"
+                          ><img
+                            src="images/tbfoldermanager_disabled.gif"
+                            title="Folder Manager" /></a
+                        ><span class="main-toolbar-cell-text"
+                          >Folder Manager</span
+                        >
+                      </li>
+                      <li
+                        class="main-toolbar-cell"
+                        id="mf:_uid_B8017823_"
+                        onrecentsclick="return ec.er(this,'onrecentsclick',true,null,null,null,event)"
+                      >
+                        <a
+                          class="main-toolbar-cell-icon"
+                          href="javascript:void(0)"
+                          id="mf:_uid_B8017823_:anchor"
+                          onclick="if(blockDblClick())return ec.er(this,'onclick',true,null,null,null,event)"
+                          ><img
+                            src="images/tbhelpcontents.gif"
+                            title="Contents" /></a
+                        ><span class="main-toolbar-cell-text">Contents</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="main-toolbar-navigation">
+                  <img src="img/selected-page.png" />
+                </div>
+              </div>
+              <script language="JavaScript" type="text/JavaScript">
+                ec.comp.create("ec.comp.MainToolBar","bGFid2FyZS53ZWIuY29tcG9uZW50LnRvb2xiYXIuTWFpblRvb2xCYXJTY3JpcHQ",{toggle:'expanded',id:'mf:mainToolbar'});
+              </script>
+            </div>
+            <!-- End Start left menu-->
+          </div>
+          <!-- Start Right Box-->
+          <div class="home-right">
+            <table
+              id="mf:workFlowTabPane"
+              style="height: 99%; width: 99%; position: relative"
+              onselection="return ec.er(this,'onselection',true,null,null,null,event)"
+              cellpadding="0"
+              cellspacing="0"
+            >
+              <tr>
+                <td valign="top" align="left">
+                  <div class="tabControl" style="overflow: hidden">
+                    <input
+                      name="mf:workFlowTabPane:sel"
+                      type="hidden"
+                      value="_uid_C24B9907_"
+                    />
+                    <div
+                      style="
+                        position: absolute;
+                        width: 10000px;
+                        height: 10000px;
+                        overflow: hidden;
+                      "
+                      id="mf:workFlowTabPane:tabContainer"
+                    >
+                      <table
+                        id="_uid_C24B9907_"
+                        tab="_uid_C24B9907_"
+                        style="position: absolute; vertical-align: top"
+                        hoverStyle="tabHover"
+                        selectedStyle="tabUp"
+                        title="Dashboard Selection"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="tabUp tab"
+                      >
+                        <tr>
+                          <td>
+                            <div>
+                              <table
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                style="width: 100%; height: 100%"
+                              >
+                                <tr>
+                                  <td icon="t"></td>
+                                  <td
+                                    id="_uid_C24B9907__t"
+                                    style="white-space: nowrap"
+                                  >
+                                    Dashboard Selection
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                    <script language="JavaScript" type="text/JavaScript">
+                      ec.comp.create("ec.comp.TabPane","10",{orientation:'top',reload:false,id:'mf:workFlowTabPane',ajax:true,wrap:true,preload:false});
+                    </script>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td valign="top">
+                  <div
+                    style="
+                      overflow: hidden;
+                      position: relative;
+                      z-index: 0;
+                      height: 100%;
+                    "
+                    class="pane"
+                    onscroll="this.scrollTop=0;this.scrollLeft=0;"
+                  >
+                    <div
+                      style="
+                        position: absolute;
+                        width: 10000px;
+                        height: 10000px;
+                        overflow: hidden;
+                      "
+                    >
+                      <div
+                        style="position: absolute; overflow: auto"
+                        id="mf:workFlowTabPane:pane:_uid_C24B9907_"
+                      >
+                        <input
+                          type="hidden"
+                          value="_uid_C24B9907_"
+                          name="mf:workFlowTabPane_clPane"
+                        />
+                        <div
+                          id="mf:_uid_E723C62D_"
+                          style="
+                            overflow-y: scroll;
+                            -webkit-overflow-scrolling: touch;
+                            height: 100%;
+                            width: 100%;
+                          "
+                        >
+                          <iframe
+                            id="mf:_uid_A3DF1C97_"
+                            onscriptreturn="return ec.er(this,'onscriptreturn',true,null,null,null,event)"
+                            ondoneloading="return ec.er(this,'ondoneloading',true,null,null,null,event)"
+                            oncallst="return ec.er(this,'oncallst',true,null,null,null,event)"
+                            src="/LIMS/index.htm?ec_resp=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ImxhYndhcmUud2ViLmNvbXBvbmVudC5pZnJhbWUuSWZyYW1lUmVzcG9uZGVyIg.E7qFYcR5FQcy1yW-KlxM2FS7096CBakZaQzrfKOAbZE&amp;iframeid=_uid_A3DF1C97_"
+                            height="100%"
+                            width="100%"
+                            style="display: block"
+                            onload="IframeReady(this)"
+                          ></iframe
+                          ><span
+                            id="mf:_uid_9F37F97D_"
+                            onpoll="return ec.er(this,'onpoll',true,null,null,'none',event)"
+                          ></span>
+                          <script language="JavaScript" type="text/JavaScript">
+                            ec.comp.create("ec.comp.Polling","bGFid2FyZS53ZWIuY29tcG9uZW50LnBvbGxpbmcuUG9sbGluZ1NjcmlwdA",{id:'mf:_uid_9F37F97D_',frequency:3600000});
+                          </script>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <!-- End Right Box-->
+        <div id="mf:status" class="homeStatusBar" style="width: 100%">
+          Previous successful login -11/24/2025 08:05:20 AM
+          <table
+            id="mf:status_statusTable"
+            class="status-table"
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            width="100%"
+          >
+            <tr id="mf:_ecid1706176">
+              <td
+                id="mf:_ecid1706177"
+                nowrap="nowrap"
+                style="padding-left: 1px; padding-top: 2px"
+                width="10px"
+              >
+                <div
+                  id="mf:status_iconHolder"
+                  class="iconHolder"
+                  style=""
+                ></div>
+              </td>
+              <td id="mf:_ecid1706178" class="statusBarLeft">
+                <div id="mf:_ecid1706179" style="width: 14px"></div>
+              </td>
+              <td
+                id="mf:status_statusBox"
+                class="statusBarMiddle"
+                align="left"
+                nowrap="nowrap"
+              >
+                <span
+                  id="mf:status_errorBox"
+                  style="color: #222222; font-weight: normal"
+                  title=""
+                ></span>
+              </td>
+              <td id="mf:_ecid1706180" class="statusBarRight">
+                <div id="mf:_ecid1706181" style="width: 13px"></div>
+              </td>
+              <td id="mf:_ecid1706182" width="10px"></td>
+            </tr>
+          </table>
+        </div>
+        <div
+          id="mf:tp"
+          style=""
+          ontaskclose="return ec.er(this,'ontaskclose',true,null,null,null,event)"
+          ontaskselect="return ec.er(this,'ontaskselect',true,null,null,null,event)"
+          onlocktimeout="return ec.er(this,'onlocktimeout',true,null,null,null,event)"
+          onnewrequest="return ec.er(this,'onnewrequest',true,null,null,null,event)"
+          onlockrefresh="return ec.er(this,'onlockrefresh',true,null,null,null,event)"
+          onuserinactive="return ec.er(this,'onuserinactive',true,null,null,null,event)"
+        ></div>
+        <div id="mf:soundFileScriptHolderDiv" style=""></div>
+        <div id="mf:scrollArea" style=""></div>
+        <div id="mf:errorBox" style=""></div>
+        <input
+          type="hidden"
+          name="javax.faces.ViewState"
+          id="javax.faces.ViewState"
+          value="ecruiser.util.SerializedComponent$TreeStructure@317add26"
+          autocomplete="off"
+        /><input type="hidden" name="mf" value="true" />
+      </form>
+      <form id="sessionTimeoutForm" action="/LIMS/index.htm" method="post">
+        <div
+          id="sessionTimeoutForm:sessionTimeout"
+          class="window"
+          ecmovable="true"
+          style="
+            left: 100px;
+            top: 100px;
+            width: 260px;
+            height: 150px;
+            display: none;
+            position: absolute;
+          "
+          align="center"
+        >
+          <div id="sessionTimeoutForm:sessionTimeout:content">
+            <table border="0" cellpadding="4" cellspacing="4" align="center">
+              <tr>
+                <td align="center">
+                  <br />
+                  <p>
+                    <span id="sessionTimeoutForm:readTimeoutspan"
+                      >Session timed out. Application is about to close.</span
+                    >
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td align="center">&nbsp;</td>
+              </tr>
+              <tr>
+                <td align="center">
+                  <button
+                    id="sessionTimeoutForm:ok_button"
+                    class="btn btn-blue"
+                    onclick="return ec.er(this,'onclick',true,null,null,null,event)"
+                    style="align: center"
+                    type="button"
+                  >
+                    OK
+                  </button>
+                </td>
+                <td align="center"></td>
+              </tr>
+            </table>
+            <input
+              type="hidden"
+              name="sessionTimeoutForm:sessionTimeout:popupState"
+              id="sessionTimeoutForm:sessionTimeout:popupState"
+            /><input
+              type="hidden"
+              name="sessionTimeoutForm:sessionTimeout:windowState"
+              id="sessionTimeoutForm:sessionTimeout:windowState"
+            /><input
+              type="hidden"
+              name="sessionTimeoutForm:sessionTimeout:hasContent"
+              id="sessionTimeoutForm:sessionTimeout:hasContent"
+              value="true"
+            /><input
+              type="hidden"
+              name="sessionTimeoutForm:sessionTimeout:windowSize"
+              id="sessionTimeoutForm:sessionTimeout:windowSize"
+              value="260px@150px"
+            />
+          </div>
+        </div>
+        <script language="JavaScript" type="text/JavaScript">
+          ec.comp.create("ec.comp.JQLIMSWindow","bGFid2FyZS53ZWIuY29tcG9uZW50Lmpxd2luZG93LkpRTElNU1dpbmRvd1NjcmlwdA",{popupDelay:0,showClose:'false',resizable:'false',sizeInputId:'sessionTimeoutForm:sessionTimeout:windowSize',closeOnEscape:'false',minWidth:'100%',title:'Session timeout',showMinimize:'false',hideTrigger:"none",minHeight:'100',popupLocation:{x:"none",y:"none"},relocatePopup:true,top:'100px',popupTrigger:"click",popupState:'hide',left:'100px',windowState:'normal',width:'260px',id:'sessionTimeoutForm:sessionTimeout',position:'null',showMaximize:'false',modal:'true',height:'150px',order:'0'});
+        </script>
+        <input
+          type="hidden"
+          name="javax.faces.ViewState"
+          id="javax.faces.ViewState"
+          value="ecruiser.util.SerializedComponent$TreeStructure@317add26"
+          autocomplete="off"
+        /><input type="hidden" name="sessionTimeoutForm" value="true" />
+      </form>
+      <div id="windowHolderDiv" style=""></div>
+      <div id="lockWindowDiv" style=""></div>
+      <div id="soundFieDiv" style=""></div>
+      <div id="sendFileDiv" style="display: none"></div>
+      <form id="fileUploadForm" action="/LIMS/index.htm" method="post">
+        <span
+          style="position: absolute; top: -100px; left: -100px"
+          class="iconinput ui-widget ui-widget-content ui-corner-all"
+          eciconinput="true"
+          id="fileUploadForm:fileUploadControl"
+          ><input
+            id="fileUploadForm:fileUploadControl_i"
+            class="iconinput-input"
+            name="fileUploadForm:fileUploadControl"
+            onecchange="return ec.er(this,'onchange',true,null,null,null,event)"
+            readonly="true"
+            oncancel="return ec.er(this,'oncancel',true,null,null,null,event)"
+            sizeLimit="0" /><a
+            class="iconinput-button ui-corner-br ui-button ui-widget ui-state-default ui-button-text-only"
+            tabindex="-1"
+            role="button"
+            onclick="ec.dom.fireDomEvent(ec.$('fileUploadForm:fileUploadControl_i'), 'oniconclick')"
+            ><span class="ui-button-text"
+              ><span class="ui-icon ui-icon-arrowstop-1-s"></span></span></a
+        ></span>
+        <script language="JavaScript" type="text/JavaScript">
+          ec.comp.create("ec.comp.FileUpload","ZWNydWlzZXIucmVuZGVyLmh0bWwuc2NyaXB0LkZpbGVVcGxvYWRTY3JpcHQ",{uploadUrl:'/LIMS/index.htm?ec_resp=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ImVjcnVpc2VyLnV0aWwuRmlsZVVwbG9hZFJlc3BvbmRlcjIi.VC8AzerF4qBtJiu7nhS3mFLMW5xf2xCz1m1eTYf2TI0',multiple:false,disabled:false,id:'fileUploadForm:fileUploadControl',inputName:'fileUploadForm:fileUploadControl_i',autoUpload:true});
+        </script>
+        <input
+          type="hidden"
+          name="javax.faces.ViewState"
+          id="javax.faces.ViewState"
+          value="ecruiser.util.SerializedComponent$TreeStructure@317add26"
+          autocomplete="off"
+        /><input type="hidden" name="fileUploadForm" value="true" />
+      </form>
+    </div>
+    <script type="text/javascript" language="JavaScript">
+      $(document).ready(function () {
+        ec.config.ajaxTimeout = parseInt(sessionTimeoutMins) * 60000 + 10000;
+        loginPageURL = document.referrer;
+      });
+      resetIEOnHelp();
+
+      //Added to fix LC515BL.
+      $(document)
+        .unbind("keydown")
+        .bind("keydown", function (event) {
+          var doPrevent = false;
+          if (event.keyCode === 8) {
+            var d = event.srcElement || event.target;
+            if (
+              (d.tagName.toUpperCase() === "INPUT" &&
+                (d.type.toUpperCase() === "TEXT" ||
+                  d.type.toUpperCase() === "PASSWORD")) ||
+              d.tagName.toUpperCase() === "TEXTAREA"
+            ) {
+              doPrevent = d.readOnly || d.disabled;
+            } else {
+              doPrevent = true;
+            }
+          }
+          if (doPrevent) {
+            event.preventDefault();
+          }
+        });
+      remove_href();
+
+      window.onbeforeunload = function beforeUnloadHandler() {
+        if (!hasSessionTimedOut()) {
+          return "Are you sure you want to leave this page?";
+        }
+      };
+    </script>
+  </body>
+</html>
+<script language="JavaScript" type="text/javascript">
+  ec.core.ensureScripts(
+    "12,7,6,ZWNydWlzZXIucmVuZGVyLmh0bWwuc2NyaXB0LlN1Z2dlc3RTY3JpcHQ,ZWNydWlzZXIucmVuZGVyLmh0bWwuc2NyaXB0LlN1Z2dlc3RJbnB1dFNjcmlwdA,bGFid2FyZS53ZWIuY29tcG9uZW50LnRvb2xiYXIuTWFpblRvb2xCYXJTY3JpcHQ,9,10,bGFid2FyZS53ZWIuY29tcG9uZW50LnBvbGxpbmcuUG9sbGluZ1NjcmlwdA,bGFid2FyZS53ZWIuY29tcG9uZW50Lmpxd2luZG93LkpRV2luZG93U2NyaXB0,bGFid2FyZS53ZWIuY29tcG9uZW50Lmpxd2luZG93LkpRTElNU1dpbmRvd1NjcmlwdA,ZWNydWlzZXIuc2NyaXB0LmZyYW1ld29yay5KUXVlcnlTY3JpcHQ,ZWNydWlzZXIuc2NyaXB0LmZyYW1ld29yay5KUXVlcnlVSVNjcmlwdA,ZWNydWlzZXIuc2NyaXB0LmZyYW1ld29yay5GaWxlVXBsb2FkZXJTY3JpcHQ,ZWNydWlzZXIucmVuZGVyLmh0bWwuc2NyaXB0LkZpbGVVcGxvYWRTY3JpcHQ"
+  );
+</script>
