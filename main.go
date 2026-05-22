@@ -1536,9 +1536,9 @@ func (p *program) Stop(s service.Service) error {
 
 func main() {
 	svcConfig := &service.Config{
-		Name:        "Version Service",
-		DisplayName: "Version Service",
-		Description: "Version Service",
+		Name:        "Labware API",
+		DisplayName: "Labware API",
+		Description: "Labware API",
 	}
 
 	prg := &program{}
