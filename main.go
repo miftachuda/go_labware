@@ -1483,16 +1483,23 @@ var logger service.Logger
 
 type program struct {
 	httpServer *http.Server
+	running    atomic.Bool
 }
 
 func (p *program) Start(s service.Service) error {
+	if !p.running.CompareAndSwap(false, true) {
+		logger.Warn("Server already running")
+		return nil
+	}
+
 	if err := initDB(); err != nil {
 		logger.Errorf("Failed to initialize database: %v", err)
+		p.running.Store(false)
 		return err
 	}
 
-	// ✅ Use a custom ServeMux so we can wrap it with CORS
 	mux := http.NewServeMux()
+
 	mux.HandleFunc("/malam", handleSampleJSON(0))
 	mux.HandleFunc("/pagi", handleSampleJSON(1))
 	mux.HandleFunc("/sore", handleSampleJSON(2))
@@ -1501,39 +1508,41 @@ func (p *program) Start(s service.Service) error {
 	mux.HandleFunc("/pagicsv", handleSampleCSV(1))
 	mux.HandleFunc("/sorecsv", handleSampleCSV(2))
 
-	// ✅ Wrap the mux with your CORS middleware
-	handlerWithCORS := enableCORS(mux)
-
-	// ✅ Assign the wrapped handler to your server
 	p.httpServer = &http.Server{
 		Addr:    ":53238",
-		Handler: handlerWithCORS,
+		Handler: enableCORS(mux),
 	}
 
 	go p.run()
+
 	return nil
 }
 
 func (p *program) run() {
 	logger.Info("Server running on http://localhost:53238")
-	if err := p.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+
+	err := p.httpServer.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
 		logger.Errorf("HTTP server ListenAndServe: %v", err)
 	}
+
+	p.running.Store(false)
 }
 
 func (p *program) Stop(s service.Service) error {
 	logger.Info("Stopping service...")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
 
-	if err := p.httpServer.Shutdown(ctx); err != nil {
-		logger.Warningf("HTTP server Shutdown: %v", err)
+	p.running.Store(false)
+
+	if p.httpServer != nil {
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		return p.httpServer.Shutdown(ctx)
 	}
-	closeDB()
-	logger.Info("Service stopped.")
+
 	return nil
 }
-
 func main() {
 	svcConfig := &service.Config{
 		Name:        "Labware_API",
