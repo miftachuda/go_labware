@@ -18,7 +18,7 @@ import (
 	"strings"
 	"sync"
 	"time"
-
+	"sync/atomic"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/kardianos/service"
 	bolt "go.etcd.io/bbolt"
@@ -1488,7 +1488,7 @@ type program struct {
 
 func (p *program) Start(s service.Service) error {
 	if !p.running.CompareAndSwap(false, true) {
-		logger.Warn("Server already running")
+		logger.Infof("Server already running")
 		return nil
 	}
 
